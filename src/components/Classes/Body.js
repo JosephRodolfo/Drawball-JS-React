@@ -5,11 +5,12 @@ export default class Body {
     this.acceleration = { x: 0, y: 0 };
     this.mass = mass;
     this.size = size;
+    this.color = "blue"
     this.currentChunk = currentChunk;
   }
 
   draw(ctx, color) {
-    ctx.fillStyle = color;
+    ctx.fillStyle = this.color;
 
     ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
   }
@@ -24,9 +25,9 @@ export default class Body {
   checkForOffBoard(position) {
     if (
       this.position.x < 0 ||
-      this.position.x > 1000 ||
+      this.position.x > 990 ||
       this.position.y < 0 ||
-      this.position.y > 1000
+      this.position.y > 990
     ) {
       return true;
     }
@@ -35,13 +36,13 @@ export default class Body {
 
   mirrorMove() {
     if (this.position.x < 0) {
-      this.position.x = this.position.x + 1000;
+      this.position.x = this.position.x + 1010;
     } else if (this.position.x > 1000) {
-      this.position.x = this.position.x - 1000;
+      this.position.x = this.position.x - 1010;
     } else if (this.position.y > 1000) {
-      this.position.y = this.position.y - 1000;
+      this.position.y = this.position.y - 1010;
     } else if (this.position.y < 0) {
-      this.position.y = this.position.y + 1000;
+      this.position.y = this.position.y + 1010;
     }
   }
 }
