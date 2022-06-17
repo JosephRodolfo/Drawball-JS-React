@@ -3,88 +3,53 @@ import {
   getMousePosition,
   snapToGridLine,
 } from "../utilities/getMousePosition";
-import { GameController } from "./GameController";
+import ViewController from "./ViewController";
+import { controller } from "./GameController";
+import {useKeyPress} from "./Controls"
 
 const Canvas = (props) => {
   const canvasRef = useRef(null);
-  const [currentChunk, setCurrentChunk] = useState([0, 0]);
+  const [currentChunk, setCurrentChunk] = useState(false);
+  const [testState, setTestState] = useState(false)
 
-  let controller = new GameController();
+  let viewController = new ViewController();
 
-  controller.createShip();
   controller.createChunk([0, 0]);
-  const useKeyPress = function (targetKey) {
+  controller.createShip();
 
-    function downHandler({ key }) {
-      if (key === "ArrowLeft") {
-        controller.playerMoveMainLogic(-10, 0);
-      }
+let boundKeyPress = useKeyPress.bind(null, controller, (chunk)=>{
+  setCurrentChunk(chunk)
+})
 
-      if (key === "ArrowRight") {
-        controller.playerMoveMainLogic(10, 0);
 
-      }
-      if (key === "ArrowDown") {
-        controller.playerMoveMainLogic(0, 10);
-     
-      }
 
-      if (key === "ArrowUp") {
 
-        controller.playerMoveMainLogic(0, -10);
 
-      }
-    }
 
-    const upHandler = ({ key }) => {
-      if (key === targetKey) {
-      }
-    };
-
-    useEffect(() => {
-      window.addEventListener("keydown", downHandler);
-      window.addEventListener("keyup", upHandler);
-
-      return () => {
-        window.removeEventListener("keydown", downHandler);
-        window.removeEventListener("keyup", upHandler);
-      };
-    });
-  };
-
-  useKeyPress();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    function gameLoop(timeStamp) {
+
+    function gameLoop() {
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       context.fillStyle = "lightgrey";
       context.fillRect(0, 0, canvas.width, canvas.height);
 
-      controller.ships[0].draw(context, "blue"); // Keep requesting new frames
-      window.requestAnimationFrame(gameLoop);
+      controller.ships[0].draw(context, "blue");     
+       window.requestAnimationFrame(gameLoop);
     }
 
     gameLoop();
   }, []);
 
-  const mouseHandler = {
-    handleClick(e) {
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
-      const coords = snapToGridLine(getMousePosition(canvas, e));
-      console.log(coords);
-      // context.fillStyle = "red";
-      // context.fillRect(coords.x, coords.y, 10, 10);
-    },
-  };
   return (
-    <div>
-      <h2>{currentChunk}</h2>
+    <div className="canvas-wrapper"
+    onKeyDown={boundKeyPress}
+    tabIndex="0">
+      <h2>{currentChunk.position}</h2>
       <canvas
-        onClick={mouseHandler.handleClick}
         height="1000px"
         width="1000px"
         className="canvas"
