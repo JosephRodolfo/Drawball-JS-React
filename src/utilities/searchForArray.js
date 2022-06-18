@@ -10,3 +10,12 @@ export function searchForArray(haystack, needle){
     }
     return -1;
   }
+
+  export function returnIndexChunkMatchingId(array, currentChunk){
+
+
+   let chunkToColor = array.findIndex((element) => {
+      return element.id === currentChunk.id;
+    });
+    return chunkToColor
+  }

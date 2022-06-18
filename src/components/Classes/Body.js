@@ -1,9 +1,6 @@
 export default class Body {
   constructor(size, mass, position, currentChunk) {
     this.position = { x: 0, y: 0 };
-    this.velocity = { x: 0, y: 0 };
-    this.acceleration = { x: 0, y: 0 };
-    this.mass = mass;
     this.size = size;
     this.color = "blue"
     this.currentChunk = currentChunk;

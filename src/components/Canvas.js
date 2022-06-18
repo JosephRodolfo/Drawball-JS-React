@@ -10,11 +10,13 @@ import { useKeyPress } from "./Controls";
 const Canvas = (props) => {
   const canvasRef = useRef(null);
   const [currentChunk, setCurrentChunk] = useState([0, 0]);
+  const [disabledButton, setDisabledButton] = useState(false);
 
-  let viewController = new ViewController();
+
 
 
   const startGame=()=>{
+    setDisabledButton(true);
   controller.createChunk([0, 0]);
   controller.createShip();
 
@@ -72,7 +74,7 @@ setCurrentChunk(controller.ships[0].currentChunk)
 
   return (
     <div className="canvas-wrapper" onKeyDown={boundKeyPress} tabIndex="0">
-      <h2>{currentChunk.position}</h2>
+      <h2>{`${currentChunk.position} `}</h2>
       <p>State: {currentChunk.state}</p>
       <canvas
         height="1010px"
@@ -81,7 +83,7 @@ setCurrentChunk(controller.ships[0].currentChunk)
         ref={canvasRef}
         {...props}
       />
-      <button onClick={startGame}>Button</button>
+      <button disabled={disabledButton}onClick={startGame}>Button</button>
       <button onClick={()=>{
         console.log(controller)
       }}>check everything</button>
