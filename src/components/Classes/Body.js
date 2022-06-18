@@ -25,9 +25,9 @@ export default class Body {
   checkForOffBoard(position) {
     if (
       this.position.x < 0 ||
-      this.position.x > 990 ||
+      this.position.x > 1000 ||
       this.position.y < 0 ||
-      this.position.y > 990
+      this.position.y > 1000
     ) {
       return true;
     }
@@ -36,13 +36,13 @@ export default class Body {
 
   mirrorMove() {
     if (this.position.x < 0) {
-      this.position.x = this.position.x + 1010;
+      this.position.x = this.position.x + 1000;
     } else if (this.position.x > 1000) {
-      this.position.x = this.position.x - 1010;
+      this.position.x = this.position.x - 1000;
     } else if (this.position.y > 1000) {
-      this.position.y = this.position.y - 1010;
+      this.position.y = this.position.y - 1000;
     } else if (this.position.y < 0) {
-      this.position.y = this.position.y + 1010;
+      this.position.y = this.position.y + 1000;
     }
   }
 }

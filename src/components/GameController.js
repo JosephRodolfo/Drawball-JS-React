@@ -23,17 +23,22 @@ export class GameController {
       y: y / 10,
     });
     console.log(newOrOldChunk)
-    if (!newOrOldChunk) {
+    if (!Array.isArray(newOrOldChunk)) {
       //returns Pre-existing chunk object, load and set state in canvas;
       console.log('oldchunk')
-      return newOrOldChunk;
+      console.log(this.chunks[newOrOldChunk])
+      this.ships[0].currentChunk = this.chunks[newOrOldChunk];
+      this.ships[0].mirrorMove();
+
+
+      return this.chunks[newOrOldChunk];
     }
     //not already existing chunk, create new one, load and set state in canvas, sets in ship's state, returns new chunk object
     let newChunk = this.createChunk(newOrOldChunk);
     this.ships[0].currentChunk = newChunk;
     this.ships[0].mirrorMove();
 
-    return newOrOldChunk;
+    return newChunk;
   }
 
   createShip() {
@@ -72,7 +77,8 @@ export class GameController {
       } else {
         console.log(array[result].position, "pre-existing chunk");
 
-        return array[result].position;
+        // return array[result].position;
+        return result;
       }
     }
   }
