@@ -1,9 +1,9 @@
-import Body from "./Classes/Body";
+import Body from "../Classes/Body";
 import {
   searchForArray,
   returnIndexChunkMatchingId,
-} from "../utilities/searchForArray";
-import Chunk from "./Classes/Chunk";
+} from "../../utilities/searchForArray";
+import Chunk from "./Chunk";
 
 export class GameController {
   constructor() {
@@ -119,8 +119,4 @@ export class GameController {
 
 export const controller = new GameController();
 
-// draw(ctx, color) {
-//   ctx.fillStyle = this.color;
 
-//   ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
-// }

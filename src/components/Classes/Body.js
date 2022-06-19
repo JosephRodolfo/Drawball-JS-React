@@ -4,7 +4,9 @@ export default class Body {
     this.size = size;
     this.color = "blue"
     this.currentChunk = currentChunk;
+    this.inkLevel = 10;
   }
+
 
   draw(ctx, color) {
     ctx.fillStyle = this.color;

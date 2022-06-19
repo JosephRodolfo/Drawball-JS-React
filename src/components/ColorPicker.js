@@ -1,6 +1,6 @@
 import { ChromePicker } from "react-color";
 import { useState } from "react";
-import { controller } from "./GameController";
+import { controller } from "../components/Classes/GameController";
 
 const ColorPicker = (props) => {
   const [color, setColor] = useState({ background: "#333" });
