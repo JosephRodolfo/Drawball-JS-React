@@ -1,34 +1,30 @@
-export function useKeyPress ( controller, setState, {key} ){
+export function useKeyPress(controller, ship, token, setState, { key }) {
+  console.log(key)
   if (key === "a") {
-let result = controller.playerMoveMainLogic(-10, 0);
-    setState(result)
-
-    
+    controller.playerMoveMainLogic(-10, 0, ship, token).then((result) => {
+      setState(result);
+    });
   }
 
   if (key === "d") {
-let result =  controller.playerMoveMainLogic(10, 0);
-
-setState(result)
-
+    controller.playerMoveMainLogic(10, 0, ship, token).then((result) => {
+      setState(result);
+    });
   }
+
   if (key === "s") {
- let result =   controller.playerMoveMainLogic(0, 10);
-
- setState(result)
-
-
+    controller.playerMoveMainLogic(0, 10, ship, token).then((result) => {
+      setState(result);
+    });
   }
 
   if (key === "w") {
-  let result =  controller.playerMoveMainLogic(0, -10);
-
-  setState(result)
-
-
+    controller.playerMoveMainLogic(0, -10, ship, token).then((result) => {
+      setState(result);
+    });
   }
 
-  if (key===" "){
+  if (key === " ") {
     controller.handlePlaceColor();
   }
-};
+}

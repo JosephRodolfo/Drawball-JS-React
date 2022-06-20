@@ -1,24 +1,19 @@
-export default class Body {
-  constructor(size, mass, position, currentChunk) {
-    this.position = { x: 0, y: 0 };
+export default class Ship {
+  constructor(size, position, currentChunk, inkLevel, color, owner) {
+    this.position = position;
     this.size = size;
-    this.color = "blue"
+    this.color = color;
     this.currentChunk = currentChunk;
-    this.inkLevel = 10;
+    this.inkLevel = inkLevel;
+    this.owner= owner;
+    this.sleeping = false;
   }
 
 
-  draw(ctx, color) {
-    ctx.fillStyle = this.color;
 
-    ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
-  }
   //sets players position with new coords and returns new coords.
   move(x, y) {
-    this.position.x = this.position.x + x;
-    this.position.y = this.position.y + y;
-
-    return this.position;
+    return {x: this.position.x + x, y: this.position.y + y}
   }
 
   checkForOffBoard(position) {

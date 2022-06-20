@@ -6,71 +6,78 @@ import {
 import ViewController from "./Classes/ViewController";
 import { controller } from "./Classes/GameController";
 import { useKeyPress } from "./Controls";
+import {} from "../actions/ship";
+import { initializeCanvas } from "../utilities/initializeCanvas";
 
-const Canvas = (props) => {
+const Canvas = ({ ship }) => {
   const canvasRef = useRef(null);
-  const [currentChunk, setCurrentChunk] = useState([0, 0]);
-  const [disabledButton, setDisabledButton] = useState(false);
 
-  const startGame = () => {
-    setDisabledButton(true);
-    controller.createChunk([0, 0]);
-    controller.createShip();
+  function draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
+  }
 
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
 
-    function gameLoop() {
-      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-      context.fillStyle = "lightgrey";
-      context.fillRect(0, 0, canvas.width, canvas.height);
-      controller.ships[0].draw(context, "blue");
-      controller.drawChunk(context, currentChunk);
 
-      window.requestAnimationFrame(gameLoop);
+  function drawCurrentChunk(ctx) {
+
+    if(this.currentChunk){
+
+      this.currentChunk.state.forEach((element, indexX) => {
+        element.forEach((elementInner, indexY) => {
+          if (elementInner) {
+            ctx.fillStyle = this.currentChunk.state[indexX][indexY];
+            ctx.fillRect(
+              indexX * 10,
+              indexY * 10,
+              this.size.w,
+              this.size.h
+            );
+          }
+        });
+      });
+    } else {
+
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = "lightgrey";
     }
-
-    gameLoop();
-  };
-
-  let boundKeyPress = useKeyPress.bind(null, controller, (chunk) => {
-    setCurrentChunk(chunk);
-  });
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-
-    // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    // context.fillStyle = "lightgrey";
-    // context.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (controller.ships[0]) {
-      setCurrentChunk(controller.ships[0].currentChunk);
+    let drawShip = draw.bind(ship, context);
+    let drawChunk = drawCurrentChunk.bind(ship, context)
+    function gameLoop() {
+      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+      context.fillStyle = "lightgrey";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      
+      if (ship.position) {
+        drawChunk();
+        
+        drawShip();
+      }
+      window.requestAnimationFrame(gameLoop);
     }
-  }, [currentChunk]);
+
+    gameLoop();
+  }, [ship]);
 
   return (
-    <div className="canvas-wrapper" onKeyDown={boundKeyPress} tabIndex="0">
-      <h2>{`${currentChunk.position} `}</h2>
-      <p>State: {currentChunk.state}</p>
+    <div className="canvas-wrapper">
+      {/* {ship.position ? (
+        <h2>{`x: ${ship.position.x} y: ${ship.position.y}`}</h2>
+      ) : (
+        <h2>0,0</h2>
+      )} */}
+      {/* //   <p>State: {props.currentChunk.state}</p> */}
       <canvas
         height="1010px"
         width="1010px"
         className="canvas"
         ref={canvasRef}
-        {...props}
       />
-      <button disabled={disabledButton} onClick={startGame}>
-        Button
-      </button>
-      <button
-        onClick={() => {
-          console.log(controller);
-        }}
-      >
-        check everything
-      </button>
     </div>
   );
 };

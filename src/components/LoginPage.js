@@ -12,15 +12,15 @@ const LoginPage = () => {
     e.preventDefault();
     const { username, password } = document.forms[0];
 
-    startLogin(
+    let user = await startLogin(
       { email: username.value, password: password.value },
-      onLogin,
       () => {
         const previousLocation = location.state?.from?.pathname || "/dashboard";
-
         navigate(previousLocation);
       }
     );
+    console.log(user);
+    onLogin(user);
   };
 
   return (

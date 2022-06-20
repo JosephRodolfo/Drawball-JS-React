@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "./AuthProvider";
 import { startCreateUser } from "../actions/auth";
 import { useNavigate } from "react-router-dom";
+import { startCreateShip } from "../actions/ship";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -9,24 +10,24 @@ const SignupPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password } = document.forms[0];
+    const { email, password } = document.forms[0];
 
-    startCreateUser(
-      { email: email.value, password: password.value},
-      onCreateUser,
+    const user = await startCreateUser(
+      { email: email.value, password: password.value },
       () => {
         navigate("/dashboard");
       }
     );
+    onCreateUser(user);
+    console.log(user);
+    const ship = await startCreateShip(user.token);
   };
 
   return token ? (
     <div className="box-layout">
       <div className="box-layout__box">
         <h1>Error!</h1>
-        <p className="description">
-          Sorry, but you're already logged in!
-        </p>
+        <p className="description">Sorry, but you're already logged in!</p>
       </div>
     </div>
   ) : (
@@ -36,7 +37,6 @@ const SignupPage = () => {
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="input-group">
-
             <input
               type="text"
               className=".input-group__item text-input"
