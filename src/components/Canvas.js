@@ -1,13 +1,5 @@
-import { useRef, useEffect, useState } from "react";
-import {
-  getMousePosition,
-  snapToGridLine,
-} from "../utilities/getMousePosition";
-import ViewController from "./Classes/ViewController";
-import { controller } from "./Classes/GameController";
-import { useKeyPress } from "./Controls";
-import {} from "../actions/ship";
-import { initializeCanvas } from "../utilities/initializeCanvas";
+import { useRef, useEffect } from "react";
+
 
 const Canvas = ({ ship }) => {
   const canvasRef = useRef(null);
@@ -20,7 +12,6 @@ const Canvas = ({ ship }) => {
 
 
   function drawCurrentChunk(ctx) {
-
     if(this.currentChunk){
 
       this.currentChunk.state.forEach((element, indexX) => {
@@ -66,12 +57,13 @@ const Canvas = ({ ship }) => {
 
   return (
     <div className="canvas-wrapper">
-      {/* {ship.position ? (
-        <h2>{`x: ${ship.position.x} y: ${ship.position.y}`}</h2>
+      <h3>Chunk position</h3>
+      {ship.position ? (
+        <p>{`x: ${ship.currentChunk.position[0]} y: ${ship.currentChunk.position[1]}`}</p>
       ) : (
-        <h2>0,0</h2>
-      )} */}
-      {/* //   <p>State: {props.currentChunk.state}</p> */}
+        <p>0,0</p>
+      )} 
+  
       <canvas
         height="1010px"
         width="1010px"

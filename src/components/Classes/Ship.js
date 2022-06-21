@@ -12,31 +12,31 @@ export default class Ship {
 
 
   //sets players position with new coords and returns new coords.
-  move(x, y) {
-    return {x: this.position.x + x, y: this.position.y + y}
-  }
+  // move(x, y) {
+  //   return {x: this.position.x + x, y: this.position.y + y}
+  // }
 
-  checkForOffBoard(position) {
-    if (
-      this.position.x < 0 ||
-      this.position.x > 1000 ||
-      this.position.y < 0 ||
-      this.position.y > 1000
-    ) {
-      return true;
-    }
-    return false;
-  }
+  // checkForOffBoard(position) {
+  //   if (
+  //     this.position.x < 0 ||
+  //     this.position.x > 1000 ||
+  //     this.position.y < 0 ||
+  //     this.position.y > 1000
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  mirrorMove() {
-    if (this.position.x < 0) {
-      this.position.x = this.position.x + 1000;
-    } else if (this.position.x > 1000) {
-      this.position.x = this.position.x - 1000;
-    } else if (this.position.y > 1000) {
-      this.position.y = this.position.y - 1000;
-    } else if (this.position.y < 0) {
-      this.position.y = this.position.y + 1000;
-    }
-  }
+  // mirrorMove() {
+  //   if (this.position.x < 0) {
+  //     this.position.x = this.position.x + 1000;
+  //   } else if (this.position.x > 1000) {
+  //     this.position.x = this.position.x - 1000;
+  //   } else if (this.position.y > 1000) {
+  //     this.position.y = this.position.y - 1000;
+  //   } else if (this.position.y < 0) {
+  //     this.position.y = this.position.y + 1000;
+  //   }
+  // }
 }

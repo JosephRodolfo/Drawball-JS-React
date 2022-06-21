@@ -40,7 +40,7 @@ export const createChunk = async (token, chunkPositionInfo) => {
   }
 };
 
-export const updateChunk = async (token, idParam, updatedChunkInfo) => {
+export const updateChunk = async (token, updatedChunkInfo) => {
   if (
     updatedChunkInfo.hasOwnProperty("state") &&
     updatedChunkInfo.state === ""
@@ -50,7 +50,7 @@ export const updateChunk = async (token, idParam, updatedChunkInfo) => {
 
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_PORT}/v1/chunk/${idParam}`,
+      `${process.env.REACT_APP_PORT}/v1/chunk/`,
       {
         method: "PATCH",
         headers: {

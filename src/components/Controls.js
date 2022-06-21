@@ -1,5 +1,4 @@
 export function useKeyPress(controller, ship, token, setState, { key }) {
-  console.log(key)
   if (key === "a") {
     controller.playerMoveMainLogic(-10, 0, ship, token).then((result) => {
       setState(result);
@@ -25,6 +24,6 @@ export function useKeyPress(controller, ship, token, setState, { key }) {
   }
 
   if (key === " ") {
-    controller.handlePlaceColor();
+    controller.handlePlaceColor(ship, token);
   }
 }

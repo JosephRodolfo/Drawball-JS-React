@@ -19,7 +19,6 @@ const LoginPage = () => {
         navigate(previousLocation);
       }
     );
-    console.log(user);
     onLogin(user);
   };
 
