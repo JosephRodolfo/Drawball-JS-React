@@ -1,8 +1,7 @@
 import { ChromePicker } from "react-color";
 import { useState } from "react";
-import { controller } from "../components/Classes/GameController";
 
-const ColorPicker = (props) => {
+const ColorPicker = ({updateShipColor}) => {
   const [color, setColor] = useState({ background: "#333" });
 
   const handleChangeComplete = (color) => {
@@ -10,7 +9,7 @@ const ColorPicker = (props) => {
   };
 
   const changeColor = () => {
-    controller.ships[0].color = color.background;
+    updateShipColor({color: color.background})
   };
 
   return (

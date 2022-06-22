@@ -1,11 +1,10 @@
-import Body from "./Ship";
 import { createChunk, getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
-import { useAuth } from "../AuthProvider";
-
-import Chunk from "./Chunk";
 
 export class GameController {
+  constructor() {
+    this.pause = false;
+  }
   mirrorMove() {
     if (this.position.x < 0) {
       this.position.x = this.position.x + 1000;
@@ -38,8 +37,8 @@ export class GameController {
     const currentPosition = ship.currentChunk.position;
     const color = ship.color;
 
-    const x = ship.position.x / 10;
-    const y = ship.position.y / 10;
+    const x = ship.position.x * 0.1;
+    const y = ship.position.y * 0.1;
     ship.currentChunk.state[x][y] = ship.color;
 
     const newChunk = await updateChunk(token, {
@@ -51,46 +50,49 @@ export class GameController {
   }
 
   async playerMoveMainLogic(x, y, ship, token) {
-    // the steps that happen when a player moves
-    // const newPosition = ship.move(x, y);
+    let offOrOnChunk = this.checkForOffBoard.call(ship);
     const newPosition = this.move.call(ship, x, y);
 
     ship.position = newPosition;
 
-    const offOrOnChunk = this.checkForOffBoard.call(ship, newPosition);
-
-    // const offOrOnChunk = ship.checkForOffBoard(newPosition);
     if (!offOrOnChunk) {
+      this.pause = false;
       return ship;
+    } else {
+      this.pause = true;
     }
-    const newOrOldChunk = await this.handlePlayerHittingNewChunk(
-      ship,
-      { x: x * 0.1, y: y * 0.1 },
-      token
-    );
-    if (newOrOldChunk.length === 2) {
-      console.log("new chunk");
-      const newChunk = await createChunk(token, { position: newOrOldChunk });
+    if (this.pause) {
+      const newOrOldChunk = await this.handlePlayerHittingNewChunk(
+        ship,
+        { x: x * 0.1, y: y * 0.1 },
+        token
+      );
+      if (newOrOldChunk[0] === false) {
+        console.log(newOrOldChunk[1]);
+        console.log("new chunk");
+        const newChunk = await createChunk(token, {
+          position: newOrOldChunk[1],
+        });
+        const updatedShip = await updateShip(token, ship._id, {
+          currentChunk: newChunk,
+          position: { x: ship.position.x, y: ship.position.y },
+        });
+
+        this.mirrorMove.call(updatedShip);
+        return updatedShip;
+      }
+      //not already existing chunk, create new one, load and set state in canvas, sets in ship's state, returns new chunk object
+      console.log("preexisting chunk");
+      //returns Pre-existing chunk object, load and set state in canvas;
       const updatedShip = await updateShip(token, ship._id, {
-        currentChunk: newChunk,
+        currentChunk: newOrOldChunk[1][0],
         position: { x: ship.position.x, y: ship.position.y },
       });
 
       this.mirrorMove.call(updatedShip);
+
       return updatedShip;
     }
-    //not already existing chunk, create new one, load and set state in canvas, sets in ship's state, returns new chunk object
-    console.log("preexisting chunk");
-    //returns Pre-existing chunk object, load and set state in canvas;
-
-    const updatedShip = await updateShip(token, ship._id, {
-      currentChunk: newOrOldChunk[0],
-      position: { x: ship.position.x, y: ship.position.y },
-    });
-
-    this.mirrorMove.call(updatedShip);
-
-    return updatedShip;
   }
 
   async handlePlayerHittingNewChunk(ship, chunk, token) {
@@ -102,10 +104,10 @@ export class GameController {
     const newChunk = await getChunk(token, { position: testChunk });
 
     if (newChunk) {
-      return newChunk;
+      return [true, newChunk];
     }
 
-    return testChunk; //array
+    return [false, testChunk]; //array
   }
 }
 //sets color in state of chunk at array of array position of current square

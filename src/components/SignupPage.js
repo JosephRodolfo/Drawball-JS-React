@@ -19,8 +19,8 @@ const SignupPage = () => {
       }
     );
     onCreateUser(user);
-    console.log(user);
-    const ship = await startCreateShip(user.token);
+    // const ship = await startCreateShip(user.token);
+    await startCreateShip(user.token);
   };
 
   return token ? (

@@ -15,7 +15,7 @@ export const startCreateShip = async (token) => {
       const data = await response.json();
         return data;
     } catch (e) {
-      console.error(`Could not add ship: ${e}`);
+      console.error(`Could not create ship: ${e}`);
     }
   };
 

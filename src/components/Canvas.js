@@ -37,6 +37,7 @@ const Canvas = ({ ship }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+    
     let drawShip = draw.bind(ship, context);
     let drawChunk = drawCurrentChunk.bind(ship, context)
     function gameLoop() {
