@@ -10,7 +10,6 @@ import { updateShip } from "../actions/ship";
 
 function Dashboard() {
   const [ship, setShip] = useState({}); 
-   const [paused, setPause] = useState(false);
 
   const [controller, setController] = useState({});
   const { token, id } = useAuth();
@@ -19,7 +18,6 @@ function Dashboard() {
     getSetInitialGameState(token, id, setShip);
     let controller = new GameController();
     setController(controller);
-    console.log("initial useeffect fired");
   }, [token, id]);
 
   let boundKeyPress = useKeyPress.bind(
@@ -28,13 +26,6 @@ function Dashboard() {
     ship,
     token,
     (updatedShip) => {
-      if(updateShip===false){
-
-        setPause(true)
-        return;
-      }
-      setPause(false)
-
       setShip(updatedShip);
     }
   );
@@ -50,9 +41,8 @@ function Dashboard() {
   }
 
   return (
-    <div className="dashboard" onKeyDown={!paused && boundKeyPress} tabIndex="0">
+    <div className="dashboard" onKeyDown={boundKeyPress} tabIndex="0">
       <div className="temp-page">
-        {paused ? <p>LOADING</p> : <p>NOT LOADING</p>}
         <Canvas ship={ship} />
         <ColorPicker updateShipColor={updateShipColor} />
       </div>

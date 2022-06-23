@@ -39,12 +39,27 @@ export class GameController {
 
     const x = ship.position.x * 0.1;
     const y = ship.position.y * 0.1;
-    ship.currentChunk.state[x][y] = ship.color;
+    const updatesObject = { color: color, coords: { x: x, y: y } };
+    const indexOfMatch = ship.currentChunk.state.findIndex((element) => {
+      return (
+        element.coords.x === x && element.coords.y === y
+      );
+    });
+    console.log(indexOfMatch)
+    if (indexOfMatch !== -1) {
+      console.log('old one')
 
+      ship.currentChunk.state.splice(indexOfMatch, 1, updatesObject);
+    } else {
+      console.log('new one')
+
+      ship.currentChunk.state.unshift(updatesObject)
+      // ship.currentChunk.state.pop()
+        }
     const newChunk = await updateChunk(token, {
       position: currentPosition,
-      state: { x: x, y: y },
-      color: color,
+      state: updatesObject,
+      preexisting: indexOfMatch !== -1 ? true : false,
     });
     return newChunk;
   }
@@ -58,9 +73,9 @@ export class GameController {
     if (!offOrOnChunk) {
       this.pause = false;
       return ship;
-    } else {
-      this.pause = true;
     }
+    this.pause = true;
+
     if (this.pause) {
       const newOrOldChunk = await this.handlePlayerHittingNewChunk(
         ship,
@@ -85,7 +100,7 @@ export class GameController {
       console.log("preexisting chunk");
       //returns Pre-existing chunk object, load and set state in canvas;
       const updatedShip = await updateShip(token, ship._id, {
-        currentChunk: newOrOldChunk[1][0],
+        currentChunk: newOrOldChunk[1],
         position: { x: ship.position.x, y: ship.position.y },
       });
 
@@ -96,18 +111,17 @@ export class GameController {
   }
 
   async handlePlayerHittingNewChunk(ship, chunk, token) {
-    const testChunk = [
-      ship.currentChunk.position[0] + chunk.x,
-      ship.currentChunk.position[1] - chunk.y,
-    ];
-
+    const testChunk = {
+      x: ship.currentChunk.position.x + chunk.x,
+      y: ship.currentChunk.position.y - chunk.y,
+    };
     const newChunk = await getChunk(token, { position: testChunk });
 
     if (newChunk) {
       return [true, newChunk];
     }
 
-    return [false, testChunk]; //array
+    return [false, testChunk]; //object with coordinates for where new chunk should be 
   }
 }
 //sets color in state of chunk at array of array position of current square

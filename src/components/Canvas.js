@@ -1,6 +1,5 @@
 import { useRef, useEffect } from "react";
 
-
 const Canvas = ({ ship }) => {
   const canvasRef = useRef(null);
 
@@ -9,26 +8,21 @@ const Canvas = ({ ship }) => {
     ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
   }
 
-
-
   function drawCurrentChunk(ctx) {
-    if(this.currentChunk){
-
-      this.currentChunk.state.forEach((element, indexX) => {
-        element.forEach((elementInner, indexY) => {
-          if (elementInner) {
-            ctx.fillStyle = this.currentChunk.state[indexX][indexY];
-            ctx.fillRect(
-              indexX * 10,
-              indexY * 10,
-              this.size.w,
-              this.size.h
-            );
-          }
-        });
+    if (this.currentChunk) {
+      this.currentChunk.state.forEach((element, index) => {
+        if (element === null){
+          return;
+        }
+        ctx.fillStyle = element.color
+        ctx.fillRect(
+          element.coords.x * 10,
+          element.coords.y * 10,
+          this.size.w,
+          this.size.h
+        );
       });
     } else {
-
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = "lightgrey";
     }
@@ -37,37 +31,43 @@ const Canvas = ({ ship }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    
+
     let drawShip = draw.bind(ship, context);
-    let drawChunk = drawCurrentChunk.bind(ship, context)
-    function gameLoop() {
+    let drawChunk = drawCurrentChunk.bind(ship, context);
+    function gameLoop(running) {
+      if(running===true){
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       context.fillStyle = "lightgrey";
       context.fillRect(0, 0, canvas.width, canvas.height);
-      
+
       if (ship.position) {
         drawChunk();
-        
+
         drawShip();
       }
-      window.requestAnimationFrame(gameLoop);
+      window.requestAnimationFrame(()=>{gameLoop(true)});
+    }
     }
 
-    gameLoop();
+    gameLoop(true);
+
+    return ()=>{
+      gameLoop(false)
+    }
   }, [ship]);
 
   return (
     <div className="canvas-wrapper">
       <h3>Chunk position</h3>
       {ship.position ? (
-        <p>{`x: ${ship.currentChunk.position[0]} y: ${ship.currentChunk.position[1]}`}</p>
+        <p>{`x: ${ship.currentChunk.position.x} y: ${ship.currentChunk.position.y}`}</p>
       ) : (
         <p>0,0</p>
-      )} 
-  
+      )}
+
       <canvas
-        height="1010px"
-        width="1010px"
+        height="1000px"
+        width="1000px"
         className="canvas"
         ref={canvasRef}
       />
