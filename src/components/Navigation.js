@@ -6,7 +6,8 @@ export const Navigation = () => {
   const { onLogout, token } = useAuth();
 
   const logout = async () => {
-    startLogout(token, onLogout);
+    const logout = startLogout(token);
+    onLogout(logout)
   };
 
   return (
