@@ -7,9 +7,12 @@ import { useKeyPress } from "./Controls";
 import { GameController } from "./Classes/GameController";
 import { useAuth } from "./AuthProvider";
 import { updateShip } from "../actions/ship";
+import { socket } from "../services/socket";
 
 function Dashboard() {
   const [ship, setShip] = useState({}); 
+  const [loading, setLoading] = useState(true); 
+
 
   const [controller, setController] = useState({});
   const { token, id } = useAuth();
@@ -27,8 +30,19 @@ function Dashboard() {
     token,
     (updatedShip) => {
       setShip(updatedShip);
-    }
-  );
+    },
+    setLoading
+    );
+
+  useEffect(() => {
+   
+    socket.emit("connected", "world");
+    return () => {
+      socket.emit("disconnected", "world");
+    };
+  }, [ship, setShip]);
+
+  
 
   async function updateShipColor(updates) {
     let currentState = ship.currentChunk.state;
@@ -40,9 +54,15 @@ function Dashboard() {
     setShip(updatedShip);
   }
 
+
+
+
+  
+
   return (
-    <div className="dashboard" onKeyDown={boundKeyPress} tabIndex="0">
+    <div className="dashboard" onKeyDown={!loading ? undefined: boundKeyPress} tabIndex="0">
       <div className="temp-page">
+        {!loading && <p>Loading Chunk</p>}
         <Canvas ship={ship} />
         <ColorPicker updateShipColor={updateShipColor} />
       </div>

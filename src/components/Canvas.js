@@ -66,8 +66,8 @@ const Canvas = ({ ship }) => {
       )}
 
       <canvas
-        height="1000px"
-        width="1000px"
+        height="1010px"
+        width="1010px"
         className="canvas"
         ref={canvasRef}
       />
