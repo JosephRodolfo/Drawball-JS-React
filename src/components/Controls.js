@@ -37,6 +37,14 @@ export function useKeyPress(
   }
 
   if (key === " ") {
-    controller.handlePlaceColor.call(ship, token);
+    //will probably move thsi below the the handlePlaceColor just in case to prevent errors once I fix html/css and positioning
+    //at the moment loading moves map around which is annoying.
+
+    setLoading(true);
+
+    controller.handlePlaceColor.call(ship, token).then((result)=>{
+      return result;
+
+    });
   }
 }

@@ -1,68 +1,38 @@
 import { useRef, useEffect } from "react";
+import { drawController } from "../utilities/canvasDrawing";
 
 const Canvas = ({ ship }) => {
   const canvasRef = useRef(null);
-
-  function draw(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
-  }
-
-  function drawCurrentChunk(ctx) {
-    if (this.currentChunk) {
-      this.currentChunk.state.forEach((element, index) => {
-        if (element === null){
-          return;
-        }
-        ctx.fillStyle = element.color
-        ctx.fillRect(
-          element.coords.x * 10,
-          element.coords.y * 10,
-          this.size.w,
-          this.size.h
-        );
-      });
-    } else {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.fillStyle = "lightgrey";
-    }
-  }
-
+  const requestRef = useRef(null);
   useEffect(() => {
+
+  function gameLoop() {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-
-    let drawShip = draw.bind(ship, context);
-    let drawChunk = drawCurrentChunk.bind(ship, context);
-    function gameLoop(running) {
-      if(running===true){
-      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-      context.fillStyle = "lightgrey";
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (ship.position) {
-        drawChunk();
-
-        drawShip();
-      }
-      window.requestAnimationFrame(()=>{gameLoop(true)});
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    context.fillStyle = "lightgrey";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    if (ship.position) {
+      drawController.drawCurrentChunk.call(ship, context);
+      drawController.draw.call(ship, context);
     }
-    }
+    requestRef.current = requestAnimationFrame(gameLoop);
+  }
 
-    gameLoop(true);
-
-    return ()=>{
-      gameLoop(false)
-    }
+    requestRef.current = requestAnimationFrame(gameLoop);
+    return () => cancelAnimationFrame(requestRef.current);
   }, [ship]);
 
   return (
     <div className="canvas-wrapper">
       <h3>Chunk position</h3>
       {ship.position ? (
-        <p>{`x: ${ship.currentChunk.position.x} y: ${ship.currentChunk.position.y}`}</p>
+        <div>
+        <p>Chunk position: {`x: ${ship.currentChunk.position.x} y: ${ship.currentChunk.position.y}`}</p>
+        <p>Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}</p>
+        </div>
       ) : (
-        <p>0,0</p>
+        <p>No ship found</p>
       )}
 
       <canvas
