@@ -6,61 +6,85 @@ import { useEffect, useState } from "react";
 import { useKeyPress } from "./Controls";
 import { GameController } from "./Classes/GameController";
 import { useAuth } from "./AuthProvider";
-import { updateShip } from "../actions/ship";
 import { socket } from "../services/socket";
+import { setShipColor } from "../utilities/updateShipColor";
 
 function Dashboard() {
-  const [ship, setShip] = useState({}); 
-  const [loading, setLoading] = useState(true); 
-
-
+  const [ship, setShip] = useState({});
+  const [loading, setLoading] = useState(true);
   const [controller, setController] = useState({});
+  const [currentChunk, setCurrentChunk] = useState(null);
   const { token, id } = useAuth();
 
   useEffect(() => {
-    getSetInitialGameState(token, id, setShip);
+    console.log('initial useeffect fired')
+    getSetInitialGameState(token, id).then((ship) => {
+      setShip(ship);
+      const roomId = ship.currentChunk._id;
+      setCurrentChunk(roomId);
+
+      socket.emit("join", { id: id, room: roomId }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      });
+    });
     let controller = new GameController();
     setController(controller);
+
+    return () => {
+      socket.emit("leave", id);
+    };
   }, [token, id]);
 
-  let boundKeyPress = useKeyPress.bind(
+  const boundKeyPress = useKeyPress.bind(
     null,
     controller,
     ship,
     token,
-    (updatedShip) => {
-      setShip(updatedShip);
-    },
-    setLoading
-    );
+    setLoading,
+    (result) => {
+      if (result.currentChunk) {
+        setShip(result);
+      }
+      if (result.currentChunk._id !== currentChunk){
+        setCurrentChunk(result.currentChunk._id)
+        socket.emit("switch", { id: id, room: currentChunk }, (error) => {
+          if (error) {
+            alert(error);
+          }
+        });
+      }
+      if (result.coords){
+        console.log(result)
+      sendUpdates(result);}
+    }
+  );
 
-  useEffect(() => {
-   
-    socket.emit("connected", "world");
-    return () => {
-      socket.emit("disconnected", "world");
-    };
-  }, [ship, setShip]);
+  const updateShipColor = (updates) => {
+    setShipColor.bind(ship, token, id, updates, setShip)();
+  };
 
-  
+  function sendUpdates(update) {
+    socket.emit("sendUpdate", update, (error) => {
+      if (error) {
+        return console.log(error);
+      }
 
-  async function updateShipColor(updates) {
-    let currentState = ship.currentChunk.state;
-    const updatedShip = await updateShip(token, id, {
-      position: { x: ship.position.x, y: ship.position.y },
-      ...updates,
+      console.log("Message delivered");
     });
-    updatedShip.currentChunk.state = currentState;
-    setShip(updatedShip);
   }
 
 
 
 
-  
 
   return (
-    <div className="dashboard" onKeyDown={!loading ? undefined: boundKeyPress} tabIndex="0">
+    <div
+      className="dashboard"
+      onKeyDown={!loading ? undefined : boundKeyPress}
+      tabIndex="0"
+    >
       <div className="temp-page">
         {!loading && <p>Loading Chunk</p>}
         <Canvas ship={ship} />
