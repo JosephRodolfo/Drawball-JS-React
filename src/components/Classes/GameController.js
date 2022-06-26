@@ -83,8 +83,8 @@ export class GameController {
         token
       );
       if (newOrOldChunk[0] === false) {
-        console.log(newOrOldChunk[1]);
-        console.log("new chunk");
+        // console.log(newOrOldChunk[1]);
+        // console.log("new chunk");
         const newChunk = await createChunk(token, {
           position: newOrOldChunk[1],
         });
@@ -96,7 +96,7 @@ export class GameController {
         this.mirrorMove.call(updatedShip);
         return updatedShip;
       }
-      console.log("preexisting chunk");
+      // console.log("preexisting chunk");
       const updatedShip = await updateShip(token, ship._id, {
         currentChunk: newOrOldChunk[1],
         position: { x: ship.position.x, y: ship.position.y },

@@ -8,22 +8,21 @@ import { GameController } from "./Classes/GameController";
 import { useAuth } from "./AuthProvider";
 import { socket } from "../services/socket";
 import { setShipColor } from "../utilities/updateShipColor";
+import { findStateMatch } from "../utilities/realTimeHelpers";
 
 function Dashboard() {
   const [ship, setShip] = useState({});
   const [loading, setLoading] = useState(true);
   const [controller, setController] = useState({});
-  const [currentChunk, setCurrentChunk] = useState(null);
+  const [room, setCurrentRoom] = useState(null);
   const { token, id } = useAuth();
 
   useEffect(() => {
-    console.log('initial useeffect fired')
-    getSetInitialGameState(token, id).then((ship) => {
-      setShip(ship);
-      const roomId = ship.currentChunk._id;
-      setCurrentChunk(roomId);
+    getSetInitialGameState(token, id).then((returnedShip) => {
+       setShip(returnedShip);
+      setCurrentRoom(returnedShip.currentChunk._id);
 
-      socket.emit("join", { id: id, room: roomId }, (error) => {
+      socket.emit("join", {userId: id, room: returnedShip.currentChunk._id}, (error) => {
         if (error) {
           alert(error);
         }
@@ -47,17 +46,18 @@ function Dashboard() {
       if (result.currentChunk) {
         setShip(result);
       }
-      if (result.currentChunk._id !== currentChunk){
-        setCurrentChunk(result.currentChunk._id)
-        socket.emit("switch", { id: id, room: currentChunk }, (error) => {
+      if (result.currentChunk && result.currentChunk._id !== room){
+        setCurrentRoom(result.currentChunk._id)
+        socket.emit("switch", { userId: id, room: result.currentChunk._id}, (error) => {
           if (error) {
             alert(error);
           }
         });
+
       }
       if (result.coords){
-        console.log(result)
       sendUpdates(result);}
+        return result
     }
   );
 
@@ -71,13 +71,35 @@ function Dashboard() {
         return console.log(error);
       }
 
-      console.log("Message delivered");
     });
   }
 
 
 
+  useEffect(() => {
+    socket.on("message", printSocketMessage);
+socket.on("transferCoords", updateSharedBoardFunc);
+return ()=>{
+  socket.off("transferCoords", updateSharedBoardFunc);
+  socket.off("message", printSocketMessage);
+}
 
+
+
+  }, [ship]);
+
+
+
+  const updateSharedBoardFunc = (update) => {
+    const newShip = findStateMatch(ship, update);
+    setShip(newShip)
+    
+  }
+
+  const printSocketMessage = (message)=>{
+    console.log(message.text)
+
+  }
 
   return (
     <div
@@ -86,7 +108,7 @@ function Dashboard() {
       tabIndex="0"
     >
       <div className="temp-page">
-        {!loading && <p>Loading Chunk</p>}
+        {!loading? <p>Loading Chunk</p>: <p>Chunk Ready</p>}
         <Canvas ship={ship} />
         <ColorPicker updateShipColor={updateShipColor} />
       </div>
