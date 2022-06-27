@@ -28,7 +28,7 @@ const Canvas = ({ ship }) => {
       <h3>Chunk position</h3>
       {ship.position ? (
         <div>
-        <p>Chunk position: {`x: ${ship.currentChunk.position.x} y: ${ship.currentChunk.position.y}`}</p>
+        <p>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</p>
         <p>Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}</p>
         </div>
       ) : (

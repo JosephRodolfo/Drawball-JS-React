@@ -19,7 +19,7 @@ function Dashboard() {
 
   useEffect(() => {
     getSetInitialGameState(token, id).then((returnedShip) => {
-       setShip(returnedShip);
+      setShip(returnedShip);
       setCurrentRoom(returnedShip.currentChunk._id);
 
       socket.emit("join", {userId: id, room: returnedShip.currentChunk._id}, (error) => {

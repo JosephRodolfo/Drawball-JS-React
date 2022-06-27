@@ -4,14 +4,12 @@ function draw(ctx) {
 }
 function drawCurrentChunk(ctx) {
   if (this.currentChunk) {
-    this.currentChunk.state.forEach((element) => {
-      if (element === null) {
-        return;
-      }
+    this.currentChunk.forEach((element) => {
+
       ctx.fillStyle = element.color;
       ctx.fillRect(
-        element.coords.x * 10,
-        element.coords.y * 10,
+        element.x * 10,
+        element.y * 10,
         this.size.w,
         this.size.h
       );
