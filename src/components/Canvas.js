@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { drawController } from "../utilities/canvasDrawing";
 
-const Canvas = ({ ship }) => {
+const Canvas = ({ ship, ghostShip }) => {
   const canvasRef = useRef(null);
   const requestRef = useRef(null);
   useEffect(() => {
@@ -15,20 +15,20 @@ const Canvas = ({ ship }) => {
     if (ship.position) {
       drawController.drawCurrentChunk.call(ship, context);
       drawController.draw.call(ship, context);
+      ghostShip.length !==0 && ghostShip.forEach((ship)=>{drawController.draw.call(ship, context)})
     }
     requestRef.current = requestAnimationFrame(gameLoop);
   }
 
     requestRef.current = requestAnimationFrame(gameLoop);
     return () => cancelAnimationFrame(requestRef.current);
-  }, [ship]);
+  }, [ship, ghostShip]);
 
   return (
     <div className="canvas-wrapper">
-      <h3>Chunk position</h3>
       {ship.position ? (
         <div>
-        <p>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</p>
+        <h3>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</h3>
         <p>Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}</p>
         </div>
       ) : (

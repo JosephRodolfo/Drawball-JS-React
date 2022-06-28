@@ -17,19 +17,24 @@ function Dashboard() {
   const [controller, setController] = useState({});
   const [room, setCurrentRoom] = useState(null);
   const { token, id } = useAuth();
+  const [shareRealTime, setShare] = useState(false);
+  const [ghostShip, setGhostShip] = useState([]);
 
   useEffect(() => {
     getSetInitialGameState(token, id).then((returnedShip) => {
+      const currentRoomdId =
+        returnedShip.currentChunk.length !== 0
+          ? returnedShip.currentChunk[0].sessionId
+          : createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY);
       setShip(returnedShip);
-      setCurrentRoom(returnedShip.currentChunk.length !== 0 ? returnedShip.currentChunk[0].sessionId : createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY));
-
-      socket.emit("join", {userId: id, room: returnedShip.currentChunk.length !== 0 ? returnedShip.currentChunk[0].sessionId : createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY)}, (error) => {
+      setCurrentRoom(currentRoomdId);
+      socket.emit("join", { userId: id, room: currentRoomdId }, (error) => {
         if (error) {
           alert(error);
         }
       });
     });
-    let controller = new GameController();
+    const controller = new GameController();
     setController(controller);
 
     return () => {
@@ -44,24 +49,32 @@ function Dashboard() {
     token,
     setLoading,
     (result) => {
-     const hashedRoomID = createHashIdFromCoords(result.chunkX, result.chunkY) 
-
-
+      const hashedRoomID = createHashIdFromCoords(result.chunkX, result.chunkY);
       if (result.currentChunk) {
+        if (shareRealTime) {
+          sendUpdates({
+            position: result.position,
+            _id: result._id,
+            color: result.color,
+            size: result.size,
+          });
+        }
         setShip(result);
       }
-      if (result.currentChunk && hashedRoomID !== room){
-        setCurrentRoom(hashedRoomID)
-        socket.emit("switch", { userId: id, room: hashedRoomID}, (error) => {
+      if (result.currentChunk && hashedRoomID !== room) {
+        setGhostShip([]);
+        setCurrentRoom(hashedRoomID);
+        sendUpdates({ _id: result._id });
+        socket.emit("switch", { userId: id, room: hashedRoomID }, (error) => {
           if (error) {
             alert(error);
           }
         });
-
       }
-      if (result.sessionId){
-      sendUpdates(result);}
-        return result
+      if (result.sessionId) {
+        sendUpdates(result);
+      }
+      return result;
     }
   );
 
@@ -74,36 +87,49 @@ function Dashboard() {
       if (error) {
         return console.log(error);
       }
-
     });
   }
 
-
-
   useEffect(() => {
     socket.on("message", printSocketMessage);
-socket.on("transferCoords", updateSharedBoardFunc);
-return ()=>{
-  socket.off("transferCoords", updateSharedBoardFunc);
-  socket.off("message", printSocketMessage);
-}
+    socket.on("transferCoords", updateSharedBoardFunc);
+    socket.on("startSharePosition", sharePosition);
+    return () => {
+      socket.off("startSharePosition", sharePosition);
 
-
-
+      socket.off("transferCoords", updateSharedBoardFunc);
+      socket.off("message", printSocketMessage);
+    };
   }, [ship]);
 
-
+  const sharePosition = (state) => {
+    setShare(state);
+  };
 
   const updateSharedBoardFunc = (update) => {
     const newShip = findStateMatch(ship, update);
-    setShip(newShip)
-    
-  }
+    setShip(newShip);
+    if (!update.sessionId) {
+      const index = ghostShip.findIndex((element) => element._id === update._id);
+      const ghostShipCopy = ghostShip;
 
-  const printSocketMessage = (message)=>{
-    console.log(message.text)
+      if (!update.position) {
+        ghostShipCopy.splice(index, 1);
+        setGhostShip(ghostShipCopy);
+        return;
+      }
+      const newGhostShipArray =
+        index === -1
+          ? [update, ...ghostShipCopy]
+          : (ghostShipCopy[index] = update);
+      setGhostShip(newGhostShipArray);
+      return;
+    }
+  };
 
-  }
+  const printSocketMessage = (message) => {
+    console.log(message.text);
+  };
 
   return (
     <div
@@ -112,8 +138,8 @@ return ()=>{
       tabIndex="0"
     >
       <div className="temp-page">
-        {!loading? <p>Loading Chunk</p>: <p>Chunk Ready</p>}
-        <Canvas ship={ship} />
+        {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>}
+        <Canvas ghostShip={ghostShip} ship={ship} />
         <ColorPicker updateShipColor={updateShipColor} />
       </div>
     </div>

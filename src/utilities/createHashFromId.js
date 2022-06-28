@@ -1,7 +1,9 @@
 import Hashids from 'hashids'
 const hashids = new Hashids("drawball");
 //creates hash from x, y coords. cantorPairSigned, turns x, y integers into single integer,
-//accomodating negative numbers, then hashids turns it into a string. Used for session ids and socket.io rooms
+//accomodating negative numbers, then hashids turns it into a string. Used for sessionIds for socket.io rooms
+//Because player won't always have sessionId on client, using a hash permits them to calculate it based on 
+//their chunk x, y position.
 export function createHashIdFromCoords(x, y) {
   function cantorPairSigned(x, y) {
     function cantorPair(x, y) {

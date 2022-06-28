@@ -1,6 +1,6 @@
 function draw(ctx) {
   ctx.fillStyle = this.color;
-  ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h);
+  ctx.fillRect(this.position.x, this.position.y, this.size.w = 10, this.size.h = 10);
 }
 function drawCurrentChunk(ctx) {
   if (this.currentChunk) {
