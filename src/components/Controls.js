@@ -54,10 +54,6 @@ export async function useKeyPress(
   }
 
   if (key === " ") {
-    //will probably move thsi below the the handlePlaceColor just in case to prevent errors once I fix html/css and positioning
-    //at the moment loading moves map around which is annoying.
-
-
     controller.handlePlaceColor.call(ship, token).then((result) => {
       resultsCallback(result);
     }).then((result)=>{

@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import { useKeyPress } from "./Controls";
 import { GameController } from "./Classes/GameController";
 import { useAuth } from "./AuthProvider";
-import { socket } from "../services/socket";
 import { setShipColor } from "../utilities/updateShipColor";
-import { findStateMatch } from "../utilities/realTimeHelpers";
 import { createHashIdFromCoords } from "../utilities/createHashFromId";
+import { socket, socketListenerCallbacks, socketEmitter } from "../services/socket"; 
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -22,57 +21,47 @@ function Dashboard() {
 
   useEffect(() => {
     getSetInitialGameState(token, id).then((returnedShip) => {
-      const currentRoomdId =
-        returnedShip.currentChunk.length !== 0
-          ? returnedShip.currentChunk[0].sessionId
-          : createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY);
+      const currentRoomdId = createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY);
       setShip(returnedShip);
       setCurrentRoom(currentRoomdId);
-      socket.emit("join", { userId: id, room: currentRoomdId }, (error) => {
-        if (error) {
-          alert(error);
-        }
-      });
+      socketEmitter("join", { userId: id, room: currentRoomdId });
     });
     const controller = new GameController();
     setController(controller);
-
     return () => {
-      socket.emit("leave", id);
+      socketEmitter("leave", id);
     };
   }, [token, id]);
 
-  const boundKeyPress = useKeyPress.bind(
-    null,
-    controller,
-    ship,
-    token,
-    setLoading,
-    (result) => {
-      const hashedRoomID = createHashIdFromCoords(result.chunkX, result.chunkY);
-      if (result.currentChunk) {
-        if (shareRealTime) {
-          sendUpdates({
-            position: result.position,
-            _id: result._id,
-            color: result.color,
-            size: result.size,
-          });
-        }
-        setShip(result);
-      }
-      if (result.currentChunk && hashedRoomID !== room) {
-        setGhostShip([]);
-        setCurrentRoom(hashedRoomID);
-        sendUpdates({ _id: result._id });
-        socket.emit("switch", { userId: id, room: hashedRoomID }, (error) => {
-          if (error) {
-            alert(error);
-          }
+  const boundKeyPress = useKeyPress.bind(null, controller, ship, token, setLoading, (result) => {
+    
+      const {chunkX, chunkY, currentChunk, color, size, _id, position, sessionId} = result;  
+      const hashedRoomID = createHashIdFromCoords(chunkX, chunkY);
+    
+      //if another ship is present, send player coords
+      if (shareRealTime && currentChunk) {
+        socketEmitter("sendUpdate", {
+          position,
+          _id,
+          color,
+          size,
         });
       }
-      if (result.sessionId) {
-        sendUpdates(result);
+      //if result is a ship, set ship
+      if (currentChunk) {
+        setShip(result);
+      }
+      //if ship enters a new chunk, switch socket room and reset ghost ship array. 
+      //id only object param in sendUpdates tells other players to delete player from their ghost ship array because they left chunk. 
+      if (currentChunk && hashedRoomID !== room) {
+        setGhostShip([]);
+        setCurrentRoom(hashedRoomID);
+        socketEmitter("sendUpdate", { _id });
+        socketEmitter("switch", { userId: id, room: hashedRoomID });
+      }
+      //result.sessionId is color placing. sends updates to other players
+      if (sessionId) {
+        socketEmitter("sendUpdate", result);
       }
       return result;
     }
@@ -82,54 +71,19 @@ function Dashboard() {
     setShipColor.bind(ship, token, id, updates, setShip)();
   };
 
-  function sendUpdates(update) {
-    socket.emit("sendUpdate", update, (error) => {
-      if (error) {
-        return console.log(error);
-      }
-    });
-  }
-
   useEffect(() => {
-    socket.on("message", printSocketMessage);
-    socket.on("transferCoords", updateSharedBoardFunc);
-    socket.on("startSharePosition", sharePosition);
+    const boundPrint = socketListenerCallbacks.printSocketMessage.bind(null)
+    const boundShare = socketListenerCallbacks.updateSharedBoardFunc.bind(null, ship, setGhostShip, setShip, ghostShip)
+    const boundSharePosition = socketListenerCallbacks.sharePosition.bind(null, setShare)
+    socket.on("message", boundPrint);
+    socket.on("transferCoords", boundShare);
+    socket.on("startSharePosition", boundSharePosition);
     return () => {
-      socket.off("startSharePosition", sharePosition);
-
-      socket.off("transferCoords", updateSharedBoardFunc);
-      socket.off("message", printSocketMessage);
+      socket.off("startSharePosition", boundSharePosition);
+      socket.off("transferCoords", boundShare);
+      socket.off("message", boundPrint);
     };
-  }, [ship]);
-
-  const sharePosition = (state) => {
-    setShare(state);
-  };
-
-  const updateSharedBoardFunc = (update) => {
-    const newShip = findStateMatch(ship, update);
-    setShip(newShip);
-    if (!update.sessionId) {
-      const index = ghostShip.findIndex((element) => element._id === update._id);
-      const ghostShipCopy = ghostShip;
-
-      if (!update.position) {
-        ghostShipCopy.splice(index, 1);
-        setGhostShip(ghostShipCopy);
-        return;
-      }
-      const newGhostShipArray =
-        index === -1
-          ? [update, ...ghostShipCopy]
-          : (ghostShipCopy[index] = update);
-      setGhostShip(newGhostShipArray);
-      return;
-    }
-  };
-
-  const printSocketMessage = (message) => {
-    console.log(message.text);
-  };
+  }, [ship, ghostShip]);
 
   return (
     <div
