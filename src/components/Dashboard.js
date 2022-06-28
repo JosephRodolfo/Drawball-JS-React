@@ -9,6 +9,7 @@ import { useAuth } from "./AuthProvider";
 import { socket } from "../services/socket";
 import { setShipColor } from "../utilities/updateShipColor";
 import { findStateMatch } from "../utilities/realTimeHelpers";
+import { createHashIdFromCoords } from "../utilities/createHashFromId";
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -20,9 +21,9 @@ function Dashboard() {
   useEffect(() => {
     getSetInitialGameState(token, id).then((returnedShip) => {
       setShip(returnedShip);
-      setCurrentRoom(returnedShip.currentChunk._id);
+      setCurrentRoom(returnedShip.currentChunk.length !== 0 ? returnedShip.currentChunk[0].sessionId : createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY));
 
-      socket.emit("join", {userId: id, room: returnedShip.currentChunk._id}, (error) => {
+      socket.emit("join", {userId: id, room: returnedShip.currentChunk.length !== 0 ? returnedShip.currentChunk[0].sessionId : createHashIdFromCoords(returnedShip.chunkX, returnedShip.chunkY)}, (error) => {
         if (error) {
           alert(error);
         }
@@ -43,19 +44,22 @@ function Dashboard() {
     token,
     setLoading,
     (result) => {
+     const hashedRoomID = createHashIdFromCoords(result.chunkX, result.chunkY) 
+
+
       if (result.currentChunk) {
         setShip(result);
       }
-      if (result.currentChunk && result.currentChunk._id !== room){
-        setCurrentRoom(result.currentChunk._id)
-        socket.emit("switch", { userId: id, room: result.currentChunk._id}, (error) => {
+      if (result.currentChunk && hashedRoomID !== room){
+        setCurrentRoom(hashedRoomID)
+        socket.emit("switch", { userId: id, room: hashedRoomID}, (error) => {
           if (error) {
             alert(error);
           }
         });
 
       }
-      if (result.coords){
+      if (result.sessionId){
       sendUpdates(result);}
         return result
     }

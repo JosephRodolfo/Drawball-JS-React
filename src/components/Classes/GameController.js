@@ -1,4 +1,4 @@
-import { createChunk, getChunk, updateChunk } from "../../actions/chunk";
+import { getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
 
 export class GameController {
@@ -37,7 +37,6 @@ export class GameController {
       chunkX: this.chunkX,
       chunkY: this.chunkY,
       color: this.color,
-      ...(this.currentChunk.length !== 0 && this.currentChunk[0].sessionId),
     });
       const index = this.currentChunk.indexOf((element)=>{return element._id === newChunk._id})
       index ===-1 ? this.currentChunk.push(newChunk) : this.currentChunk.splice(index, 1, newChunk);
