@@ -1,6 +1,7 @@
 import { getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
 
+
 export class GameController {
   mirrorMove() {
     if (this.position.x < 0) {

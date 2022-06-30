@@ -1,63 +1,35 @@
-export async function useKeyPress(
-  controller,
-  ship,
-  token,
-  setLoading,
-  resultsCallback,
-  { key }
-) {
+import { controller } from "./Classes/GameController";
+
+//keyPress is pressing an arrow ship and moving ship. Returns moved ship for callback. 
+export async function keyPress(params, direction, resultsCallback) {
+  if (!direction){
+    return;
+  }
+  const [ship, token, setLoading] = params;
+  setLoading(false);
+  const [x, y] = direction;
+  controller
+    .playerMoveMainLogic(x, y, ship, token)
+    .then((result) => {
+      resultsCallback(result);
+    })
+    .then((result) => {
+      setLoading(true);
+    });
+}
+//spacePress is pressing space and placing pixel. Returns placed pixel for callback. 
+
+export const spacePress = (params, resultsCallback) => {
+  const [ship, token, setLoading] = params;
+
   setLoading(false);
 
-  if (key === "a") {
-    controller
-      .playerMoveMainLogic(-10, 0, ship, token)
-      .then((result) => {
-        resultsCallback(result);
-      })
-      .then((result) => {
-        setLoading(true);
-      });
-  }
-
-  if (key === "d") {
-    controller
-      .playerMoveMainLogic(10, 0, ship, token)
-      .then((result) => {
-        resultsCallback(result);
-      })
-      .then((result) => {
-        setLoading(true);
-      });
-  }
-
-  if (key === "s") {
-    controller
-      .playerMoveMainLogic(0, 10, ship, token)
-      .then((result) => {
-        resultsCallback(result);
-      })
-      .then((result) => {
-        setLoading(true);
-      });
-  }
-
-  if (key === "w") {
-    controller
-      .playerMoveMainLogic(0, -10, ship, token)
-      .then((result) => {
-        resultsCallback(result);
-        setLoading(true);
-      })
-      .then((result) => {
-        setLoading(true);
-      });
-  }
-
-  if (key === " ") {
-    controller.handlePlaceColor.call(ship, token).then((result) => {
+  controller.handlePlaceColor
+    .call(ship, token)
+    .then((result) => {
       resultsCallback(result);
-    }).then((result)=>{
-      setLoading(true)
+    })
+    .then((result) => {
+      setLoading(true);
     });
-  }
-}
+};
