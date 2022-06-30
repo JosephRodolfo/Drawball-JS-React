@@ -1,7 +1,10 @@
 import { controller } from "./Classes/GameController";
+import { directionArrowToCoords } from "../utilities/directionArrowToCoords";
 
 //keyPress is pressing an arrow ship and moving ship. Returns moved ship for callback. 
-export async function keyPress(params, direction, resultsCallback) {
+export async function keyPress(params, key, resultsCallback) {
+  const direction = directionArrowToCoords(key);
+
   if (!direction){
     return;
   }

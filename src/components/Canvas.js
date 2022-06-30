@@ -1,11 +1,11 @@
 import { useRef, useEffect } from "react";
 import { drawController } from "../utilities/canvasDrawing";
-import { useSocketUpdates } from "./Hooks/useRealTime";
+import { useSocketUpdates } from "./Hooks/socketHooks";
 
-const Canvas = ({ ship, ghostShip, shareRealTime }) => {
+const Canvas = ({ ship, shareRealTime }) => {
   const canvasRef = useRef(null);
   const requestRef = useRef(null);
-  const {newCopy, newShip} = useSocketUpdates(ship, ghostShip, shareRealTime)
+  const {newGhostShipArray, newShip} = useSocketUpdates(ship, shareRealTime)
 
   useEffect(() => {
 
@@ -18,14 +18,14 @@ const Canvas = ({ ship, ghostShip, shareRealTime }) => {
     if (newShip.position) {
       drawController.drawCurrentChunk.call(newShip, context);
       drawController.draw.call(newShip, context);
-      newCopy.length !==0 && newCopy.forEach((ship)=>{drawController.draw.call(ship, context)})
+      newGhostShipArray.length !==0 && newGhostShipArray.forEach((ship)=>{drawController.draw.call(ship, context)})
     }
     requestRef.current = requestAnimationFrame(gameLoop);
   }
 
     requestRef.current = requestAnimationFrame(gameLoop);
     return () => cancelAnimationFrame(requestRef.current);
-  }, [newShip, newCopy]);
+  }, [newShip, newGhostShipArray]);
 
   return (
     <div className="canvas-wrapper">

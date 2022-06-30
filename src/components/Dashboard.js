@@ -8,8 +8,7 @@ import { useAuth } from "./AuthProvider";
 import { setShipColor } from "../utilities/updateShipColor";
 import { createHashIdFromCoords } from "../utilities/createHashFromId";
 import {socketEmitter} from "../services/socket";
-import { useShareRealTime } from "./Hooks/useRealTime";
-import { directionArrowToCoords } from "../utilities/directionArrowToCoords";
+import { useShareRealTime } from "./Hooks/socketHooks";
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -17,7 +16,6 @@ function Dashboard() {
   const [room, setCurrentRoom] = useState(null);
   const { token, id } = useAuth();
   const shareRealTime = useShareRealTime();
-  const [ghostShip, setGhostShip] = useState([]);
 
 
   useEffect(() => {
@@ -42,18 +40,16 @@ function Dashboard() {
         return;
       });
     
-      const direction = directionArrowToCoords(key);
-      keyPress(paramsArray, direction, (result) => {
+      keyPress(paramsArray, key, (result) => {
         //set returned ship in state after completing move
         setShip(result);
         const { chunkX, chunkY, color, size, _id, position } = result;
         const hashedRoomID = createHashIdFromCoords(chunkX, chunkY);
-        //if another ship is present, send player coords
+        //if another ship is present, start sending player coords (shareRealTime determines this)
         shareRealTime && socketEmitter("sendUpdate", { position, _id, color, size });
-        //if ship enters a new chunk, switch socket room and reset ghost ship array.
+        //if ship enters a new chunk, switch socket room. 
         //id-only object param in sendUpdates tells other players to delete player from their ghost ship array because they left chunk.
         if (hashedRoomID !== room) {
-          setGhostShip([]);
           setCurrentRoom(hashedRoomID);
           socketEmitter("sendUpdate", { _id });
           socketEmitter("switch", { userId: id, room: hashedRoomID });
@@ -75,7 +71,7 @@ function Dashboard() {
     >
       <div className="temp-page">
         {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>}
-        <Canvas shareRealTime={shareRealTime} ghostShip={ghostShip} ship={ship} />
+        <Canvas shareRealTime={shareRealTime} ship={ship} />
         <ColorPicker updateShipColor={updateShipColor} />
       </div>
     </div>

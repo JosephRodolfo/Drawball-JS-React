@@ -1,3 +1,5 @@
+//updates ship with pixels placed by other players. then updates ghostShipArray (positions/colors of otehr players)
+//returns an object with the new ship and the new ghostShipArray. 
 export function socketUpdates(ship, ghostShip, update, shareRealTime) {
   const newShip = findStateMatch(ship, update);
   // setShip(newShip);
@@ -28,10 +30,12 @@ export function socketUpdates(ship, ghostShip, update, shareRealTime) {
       }
     }
   };
-  const newCopy = ghostShipCopy();
-  return newCopy ? { newCopy, newShip } : { newCopy: [], newShip}
+  const newGhostShipArray = ghostShipCopy();
+  return newGhostShipArray ? { newGhostShipArray, newShip } : { newGhostShipArray: [], newShip}
    
-
+//takes ship and an updated placed pixel from another player as params. 
+//finds if pixel coords already exist in ships currentChunk array. 
+//if so replaces them. if not, puts them in array. 
   function findStateMatch(ship, update) {
     if (ship.currentChunk) {
       const indexOfMatch = ship.currentChunk.findIndex((element) => {
