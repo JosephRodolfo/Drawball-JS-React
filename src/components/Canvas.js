@@ -1,9 +1,12 @@
 import { useRef, useEffect } from "react";
 import { drawController } from "../utilities/canvasDrawing";
+import { useSocketUpdates } from "./Hooks/useRealTime";
 
-const Canvas = ({ ship, ghostShip }) => {
+const Canvas = ({ ship, ghostShip, shareRealTime }) => {
   const canvasRef = useRef(null);
   const requestRef = useRef(null);
+  const {newCopy, newShip} = useSocketUpdates(ship, ghostShip, shareRealTime)
+
   useEffect(() => {
 
   function gameLoop() {
@@ -12,24 +15,24 @@ const Canvas = ({ ship, ghostShip }) => {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     context.fillStyle = "lightgrey";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    if (ship.position) {
-      drawController.drawCurrentChunk.call(ship, context);
-      drawController.draw.call(ship, context);
-      ghostShip.length !==0 && ghostShip.forEach((ship)=>{drawController.draw.call(ship, context)})
+    if (newShip.position) {
+      drawController.drawCurrentChunk.call(newShip, context);
+      drawController.draw.call(newShip, context);
+      newCopy.length !==0 && newCopy.forEach((ship)=>{drawController.draw.call(ship, context)})
     }
     requestRef.current = requestAnimationFrame(gameLoop);
   }
 
     requestRef.current = requestAnimationFrame(gameLoop);
     return () => cancelAnimationFrame(requestRef.current);
-  }, [ship, ghostShip]);
+  }, [newShip, newCopy]);
 
   return (
     <div className="canvas-wrapper">
-      {ship.position ? (
+      {newShip.position ? (
         <div>
-        <h3>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</h3>
-        <p>Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}</p>
+        <h3>Chunk position: {`x: ${newShip.chunkX} y: ${newShip.chunkY}`}</h3>
+        <p>Ship position: {`x: ${newShip.position.x} y: ${newShip.position.y}`}</p>
         </div>
       ) : (
         <p>No ship found</p>
