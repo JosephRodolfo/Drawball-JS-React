@@ -2,8 +2,7 @@ import { getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
 import {
   returnDirection,
-  returnOppositeDirection,
-  returnLastDigit
+  returnLastDigit,
 } from "../../utilities/returnDirection";
 
 export class GameController {
@@ -38,21 +37,22 @@ export class GameController {
   checkForMazeWall(ship, x, y, maze, moveX, moveY) {
     const positionX = Math.floor(ship.position.x / 100);
     const positionY = Math.floor(ship.position.y / 100);
-    if (!maze[positionY]){
+    if (!maze[positionY]) {
       return;
-  }
-  const currentCell = maze[positionY][positionX];
-  const lastDigitX = returnLastDigit(x)
-  const lastDigitY = returnLastDigit(y)
-
-  const direction = returnDirection(moveX*.1, moveY*.1);
-  if ((lastDigitX === 0 || lastDigitY === 0) && currentCell[direction]) {
-
-
-    return true;
     }
+    const currentCell = maze[positionY][positionX];
+    const lastDigitX = returnLastDigit(x);
+    const lastDigitY = returnLastDigit(y);
 
+    const direction = returnDirection(moveX * 0.1, moveY * 0.1);
 
+    if ((lastDigitX === 0 || lastDigitY === 0) && currentCell[direction]) {
+      return true;
+    }
+//so player can't go straight down line on maze border
+    if (lastDigitX === 0 && lastDigitY === 0) {
+      return true;
+    }
   }
 
   async handlePlaceColor(token) {
