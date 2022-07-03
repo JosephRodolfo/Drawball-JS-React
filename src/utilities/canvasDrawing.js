@@ -20,7 +20,31 @@ function drawCurrentChunk(ctx) {
   }
 }
 
+function drawMaze(ctx){
+
+  this.forEach((row)=>{
+    row.forEach((cell)=>{
+
+      const cellX = cell.x * 100 + 5;
+      const cellY = cell.y * 100 + 5;
+      cell.top && drawLine(ctx, {x: cellX, y: cellY}, {x: cellX + 100, y: cellY})
+      cell.bottom && drawLine(ctx, {x: cellX, y: cellY + 100}, {x: cellX + 100, y: cellY + 100})
+      cell.right && drawLine(ctx, {x: cellX + 100, y: cellY}, {x: cellX + 100, y: cellY + 100})      
+      cell.left && drawLine(ctx, {x: cellX, y: cellY}, {x: cellX, y: cellY + 100})
+    })
+function drawLine(ctx, start, end){
+ctx.beginPath();
+ctx.strokeStyle = 'blue';
+ctx.moveTo(start.x, start.y);
+ctx.lineTo(end.x, end.y);
+ctx.stroke();
+}
+  })
+
+}
+
 export const drawController = {
     draw,
     drawCurrentChunk,
+    drawMaze
   };

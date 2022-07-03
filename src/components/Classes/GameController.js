@@ -1,5 +1,6 @@
 import { getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
+import { returnDirection } from "../../utilities/returnDirection";
 
 
 export class GameController {
@@ -29,6 +30,19 @@ export class GameController {
       return true;
     }
     return false;
+  }
+
+  checkForMazeWall(maze, x, y){
+    const lastDigitX = this.position.x % 10;
+    const lastDigitY = this.position.y % 10;
+    if (!lastDigitX === 0 || !lastDigitY ===0){
+      return;
+    }
+    const cell = maze[this.position.x *.1][this.position.y *.1];
+    const direction = returnDirection(x, y);
+    if (cell[direction]){
+      return;
+    }
   }
 
   async handlePlaceColor(token) {
