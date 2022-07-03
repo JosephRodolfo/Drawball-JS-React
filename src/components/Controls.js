@@ -2,7 +2,7 @@ import { controller } from "./Classes/GameController";
 import { directionArrowToCoords } from "../utilities/directionArrowToCoords";
 
 //keyPress is pressing an arrow ship and moving ship. Returns moved ship for callback. 
-export async function keyPress(params, key, resultsCallback) {
+export async function keyPress(params, maze, key, resultsCallback) {
   const direction = directionArrowToCoords(key);
 
   if (!direction){
@@ -12,7 +12,7 @@ export async function keyPress(params, key, resultsCallback) {
   setLoading(false);
   const [x, y] = direction;
   controller
-    .playerMoveMainLogic(x, y, ship, token)
+    .playerMoveMainLogic(x, y, ship, maze, token)
     .then((result) => {
       resultsCallback(result);
     })

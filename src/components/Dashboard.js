@@ -43,7 +43,7 @@ function Dashboard() {
         return;
       });
     
-      keyPress(paramsArray, key, (result) => {
+      keyPress(paramsArray, maze, key, (result) => {
         //set returned ship in state after completing move
         setShip(result);
         const { chunkX, chunkY, color, size, _id, position } = result;
