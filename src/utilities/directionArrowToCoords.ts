@@ -1,4 +1,4 @@
-export function directionArrowToCoords(key) {
+export function directionArrowToCoords(key: string) {
   if (key === "a") {
     return [-10, 0];
   }

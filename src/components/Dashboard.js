@@ -5,7 +5,7 @@ import { getSetInitialGameState } from "../utilities/getSetInitialGameState";
 import { useEffect, useState } from "react";
 import { keyPress, spacePress } from "./Controls";
 import { useAuth } from "./AuthProvider";
-import { setShipColor } from "../utilities/updateShipColor";
+import {setShipColor} from "../utilities/updateShipColor";
 import { createHashIdFromCoords } from "../utilities/createHashFromId";
 import {socketEmitter} from "../services/socket";
 import { useShareRealTime } from "./Hooks/socketHooks";
@@ -55,7 +55,6 @@ function Dashboard() {
         if (hashedRoomID !== room) {
           const numbers = hashids.decode(hashedRoomID);
           const newMaze = generator(10, 10, false, numbers[0])
-          console.log(numbers);
           setMaze(newMaze);
           setCurrentRoom(hashedRoomID);
           socketEmitter("sendUpdate", { _id });
@@ -66,8 +65,15 @@ function Dashboard() {
 
   };
 
-  const updateShipColor = (updates) => {
-    setShipColor.bind(ship, token, id, updates, setShip)();
+  const updateShipColor = async (updates) => {
+
+    // const updatedShip = await updateShip(token, id, {...updates, position: { x: ship.position.x, y: ship.position.y }});
+    // setShip(updatedShip);
+    
+  setShipColor.bind(ship, token, id, updates, setShip)();
+    // setShip(updatedShip);
+    //ship.color = "red";
+    //ship.save();
   };
 
   return (

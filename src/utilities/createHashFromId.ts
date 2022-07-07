@@ -4,9 +4,9 @@ export const hashids = new Hashids("drawball");
 //accomodating negative numbers, then hashids turns it into a string. Used for session ids for socket.io rooms
 //Because player won't always have sessionId on client, using a hash permits them to calculate it based on 
 //their chunk x, y position.
-export function createHashIdFromCoords(x, y) {
-  function cantorPairSigned(x, y) {
-    function cantorPair(x, y) {
+export function createHashIdFromCoords(x: number, y: number): string {
+  function cantorPairSigned(x: number, y: number): number {
+    function cantorPair(x: number, y: number): number {
       return 0.5 * (x + y) * (x + y + 1) + y;
     }
     const a = x >= 0.0 ? 2.0 * x : -2.0 * x - 1.0;

@@ -13,7 +13,7 @@ export const getChunk = async (token, chunkPositionInfo) => {
       throw new Error(`HTTP error: ${response.status}`);
     }
 
-    let data = await response.json();
+    const data = await response.json();
     return data;
   } catch (e) {
     console.error(`Could not get chunk: ${e}`);
@@ -41,13 +41,6 @@ export const createChunk = async (token, chunkPositionInfo) => {
 };
 
 export const updateChunk = async (token, updatedChunkInfo) => {
-  if (
-    updatedChunkInfo.hasOwnProperty("state") &&
-    updatedChunkInfo.state === ""
-  ) {
-    delete updatedChunkInfo.state;
-  }
-
   try {
     const response = await fetch(
       `${process.env.REACT_APP_PORT}/v1/chunk/`,
@@ -65,7 +58,7 @@ export const updateChunk = async (token, updatedChunkInfo) => {
       throw new Error(`HTTP error: ${response.status}`);
     }
 
-    let data = await response.json();
+    const data = await response.json();
     return data;
   } catch (e) {
     console.error(`Could not edit chunk: ${e}`);

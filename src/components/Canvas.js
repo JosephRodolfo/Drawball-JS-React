@@ -4,33 +4,28 @@ import { useSocketUpdates } from "./Hooks/socketHooks";
 const Canvas = ({ ship, shareRealTime, maze }) => {
   const canvasRef = useRef(null);
   const requestRef = useRef(null);
-  const {newGhostShipArray, newShip} = useSocketUpdates(ship, shareRealTime)
+  const { newGhostShipArray, newShip } = useSocketUpdates(ship, shareRealTime);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-  function gameLoop() {
-  
+    function gameLoop() {
+      // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+      context.fillStyle = "lightgrey";
+      context.fillRect(0, 0, canvas.width, canvas.height);
 
-
-    
-  
-    // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    context.fillStyle = "lightgrey";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-  
-    if (newShip.position) {
-      drawController.drawCurrentChunk.call(newShip, context);
-      drawController.draw.call(newShip, context);
-      newGhostShipArray.length !==0 && newGhostShipArray.forEach((ship)=>{drawController.draw.call(ship, context)})
+      if (newShip.position) {
+        drawController.drawCurrentChunk.call(newShip, context);
+        drawController.draw.call(newShip, context);
+        newGhostShipArray.length !== 0 &&
+          newGhostShipArray.forEach((ship) => {
+            drawController.draw.call(ship, context);
+          });
+      }
+      drawController.drawMaze.call(maze, context);
+      requestRef.current = requestAnimationFrame(gameLoop);
     }
-    drawController.drawMaze.call(maze, context);
-
-    requestRef.current = requestAnimationFrame(gameLoop);
-
-  }
-
     requestRef.current = requestAnimationFrame(gameLoop);
     return () => cancelAnimationFrame(requestRef.current);
   }, [newShip, maze, newGhostShipArray]);
@@ -39,8 +34,10 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
     <div className="canvas-wrapper">
       {newShip.position ? (
         <div>
-        <h3>Chunk position: {`x: ${newShip.chunkX} y: ${newShip.chunkY}`}</h3>
-        <p>Ship position: {`x: ${newShip.position.x} y: ${newShip.position.y}`}</p>
+          <h3>Chunk position: {`x: ${newShip.chunkX} y: ${newShip.chunkY}`}</h3>
+          <p>
+            Ship position: {`x: ${newShip.position.x} y: ${newShip.position.y}`}
+          </p>
         </div>
       ) : (
         <p>No ship found</p>

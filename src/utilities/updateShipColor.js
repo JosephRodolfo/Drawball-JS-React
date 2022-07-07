@@ -8,3 +8,4 @@ export async function setShipColor(token, id, updates, setState) {
     updatedShip.currentChunk = currentState;
     setState(updatedShip);
   }
+//mongoose add to schema

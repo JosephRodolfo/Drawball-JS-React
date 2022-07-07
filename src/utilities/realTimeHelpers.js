@@ -2,8 +2,6 @@
 //returns an object with the new ship and the new ghostShipArray. 
 export function socketUpdates(ship, ghostShip, update, shareRealTime) {
   const newShip = findStateMatch(ship, update);
-  // setShip(newShip);
-
   const ghostShipCopy = () => {
     if (!update.sessionId) {
       const index = ghostShip.findIndex(
