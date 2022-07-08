@@ -23,29 +23,37 @@ const SignupPage = () => {
     await startCreateShip(user.token);
   };
 
-  return token ? (
+
+
+
+
+  return (
+
+  <div className="signup-page">
+   {token ? (
     <div className="box-layout">
       <div className="box-layout__box">
         <h1>Error!</h1>
         <p className="description">Sorry, but you're already logged in!</p>
-      </div>
+        </div>
     </div>
   ) : (
     <div className="box-layout">
-      <div className="box-layout__box">
+        <div className="box-layout__box">
+
         <h1 className="box-layout__title">Create your account!</h1>
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="input-group">
             <input
               type="text"
-              className=".input-group__item text-input"
+              className="input-group__item"
               name="email"
               placeholder="email"
             />
             <input
               type="password"
-              className=".input-group__item text-input"
+              className="input-group__item"
               name="password"
               placeholder="password"
             />
@@ -55,9 +63,10 @@ const SignupPage = () => {
             </button>
           </div>
         </form>
+        </div>
       </div>
-    </div>
-  );
+  )}
+</div>)
 };
 
 export default SignupPage;

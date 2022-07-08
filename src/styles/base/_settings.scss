@@ -1,1 +1,36 @@
-html, body {margin: 0; height: 100%; overflow: hidden}
+// Colors
+$dark-gray: #333;
+$gray: #666;
+$blue: #1c88bf;
+$dark-blue: #364051;
+$off-white: #f5f5f5;
+$computer-grey: #d4d0c8;
+$windows-blue: #0a246a;
+$windows-teal: #008282;
+$windows-blue-2: #000082;
+$windows-red: #fa5252;//#f04e1f;
+$windows-off-white: #fffccd;
+
+//Font-Size
+
+$font-size-large: 1.8rem;
+$font-size-small: 1.4rem;
+
+// Spacing
+$s-size: 1.2rem;
+$m-size: 1.6rem;
+$l-size: 3.2rem;
+$xl-size: 4.8rem;
+$desktop-breakpoint: 45rem;
+
+
+
+
+@mixin basic-box-shadow {
+  box-shadow:rgba(0,0,0,0.4) 2px 2px 0, white -1px -1px 0px;
+
+}
+@mixin basic-box-shadow-inset {
+  box-shadow:rgba(0,0,0,0.4) 2px 2px 0  inset, white -1px -1px 0px inset;
+}
+

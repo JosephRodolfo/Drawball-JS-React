@@ -1,8 +1,26 @@
+import { config } from "../../src/config/config";
 import { useRef, useEffect } from "react";
 import { drawController } from "../utilities/canvasDrawing";
 import { useSocketUpdates } from "./Hooks/socketHooks";
+
 const Canvas = ({ ship, shareRealTime, maze }) => {
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
   const canvasRef = useRef(null);
+
   const requestRef = useRef(null);
   const { newGhostShipArray, newShip } = useSocketUpdates(ship, shareRealTime);
 
@@ -32,23 +50,15 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
 
   return (
     <div className="canvas-wrapper">
-      {newShip.position ? (
-        <div>
-          <h3>Chunk position: {`x: ${newShip.chunkX} y: ${newShip.chunkY}`}</h3>
-          <p>
-            Ship position: {`x: ${newShip.position.x} y: ${newShip.position.y}`}
-          </p>
-        </div>
-      ) : (
-        <p>No ship found</p>
-      )}
-
+      <div className="content-container">
       <canvas
-        height="1010px"
-        width="1010px"
+        id="responsive-canvas"
+        height={1010}
+        width={1010}
         className="canvas"
         ref={canvasRef}
       />
+    </div>
     </div>
   );
 };

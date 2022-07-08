@@ -7,8 +7,9 @@ const Header = () => (
   <div className='content-container'>
     <div className='header-flex-wrapper'>
    <h1>Draw and Explore</h1>
-   </div>
    <Navigation />
+
+   </div>
    </div>
   </header>
 );

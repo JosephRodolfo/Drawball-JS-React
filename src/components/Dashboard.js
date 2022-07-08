@@ -54,8 +54,8 @@ function Dashboard() {
         //id-only object param in sendUpdates tells other players to delete player from their ghost ship array because they left chunk.
         if (hashedRoomID !== room) {
           const numbers = hashids.decode(hashedRoomID);
-          const newMaze = generator(10, 10, false, numbers[0])
-          setMaze(newMaze);
+          // const newMaze = generator(10, 10, false, numbers[0])
+          // setMaze(newMaze);
           setCurrentRoom(hashedRoomID);
           socketEmitter("sendUpdate", { _id });
           socketEmitter("switch", { userId: id, room: hashedRoomID });
@@ -67,8 +67,7 @@ function Dashboard() {
 
   const updateShipColor = async (updates) => {
 
-    // const updatedShip = await updateShip(token, id, {...updates, position: { x: ship.position.x, y: ship.position.y }});
-    // setShip(updatedShip);
+   
     
   setShipColor.bind(ship, token, id, updates, setShip)();
     // setShip(updatedShip);
@@ -82,10 +81,25 @@ function Dashboard() {
       onKeyDown={!loading ? undefined : returnKey}
       tabIndex="0"
     >
-      <div className="temp-page">
-        {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>}
+      <div className="content-container">
+       <div className="dashboard-info-container">
+      {ship.position ? (
+        <div>
+          <p>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</p>
+          <p>
+            Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}
+          </p>
+          <p>Ink Level: {ship.inkLevel}</p>
+        </div>
+      ) : (
+        <p>No ship found</p>
+      )}
+      </div> 
+        {/* {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>} */}
+        <div className="canvas-color-picker-container">
         <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
         <ColorPicker updateShipColor={updateShipColor} />
+        </div>
       </div>
     </div>
   );

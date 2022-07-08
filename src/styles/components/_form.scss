@@ -1,0 +1,36 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    > * {
+        margin-bottom: $m-size;
+    }
+
+}
+.input-group {
+    display: flex;
+    margin-bottom: $m-size;
+    flex-direction: column;
+  
+
+  }
+  
+  .input-group__item {
+    margin-bottom: $s-size;
+
+  }
+  
+.input-group {
+    display: flex;
+    margin-bottom: $m-size;
+    flex-direction: column;
+  
+  
+  }
+  
+  .input-group__item {
+    margin-bottom: $s-size;
+    @media (min-width: $desktop-breakpoint) {
+    margin-bottom: $s-size;
+    }
+  }
+  

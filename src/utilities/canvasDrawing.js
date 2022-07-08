@@ -1,6 +1,8 @@
+import { config } from "../config/config";
+
 function draw(ctx) {
   ctx.fillStyle = this.color;
-  ctx.fillRect(this.position.x, this.position.y, this.size.w = 10, this.size.h = 10);
+  ctx.fillRect(this.position.x, this.position.y, this.size.w = config.gameSize, this.size.h = config.gameSize);
 }
 function drawCurrentChunk(ctx) {
   if (this.currentChunk) {
@@ -10,8 +12,8 @@ function drawCurrentChunk(ctx) {
       ctx.fillRect(
         element.x * 10,
         element.y * 10,
-        this.size.w,
-        this.size.h
+        config.gameSize,
+        config.gameSize
       );
     });
   } else {
@@ -22,6 +24,7 @@ function drawCurrentChunk(ctx) {
 
 function drawMaze(ctx){
 
+  let hundred = config.gameSize;
   this.forEach((row)=>{
     row.forEach((cell)=>{
 

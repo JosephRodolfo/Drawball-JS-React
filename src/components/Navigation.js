@@ -10,15 +10,24 @@ export const Navigation = () => {
     socket.emit("leave", id);
 
     const logout = startLogout(token);
-    onLogout(logout)
+    onLogout(logout);
   };
 
   return (
     <nav className="navigation">
-      <NavLink className='navlinks' to="/login">Login</NavLink>
-      <NavLink className='navlinks'to="/dashboard">Dashboard</NavLink>
-      <NavLink className='navlinks' to="/signup">Signup</NavLink>
-      {token && (
+      {!token ? (
+        <div>
+          <NavLink className="navlinks" to="/login">
+            Login
+          </NavLink>
+          <NavLink className="navlinks" to="/dashboard">
+            Dashboard
+          </NavLink>
+          <NavLink className="navlinks" to="/signup">
+            Signup
+          </NavLink>
+        </div>
+      ) : (
         <button className="signout-non-button" type="button" onClick={logout}>
           Sign Out
         </button>

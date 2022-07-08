@@ -30,7 +30,7 @@ const LoginPage = () => {
           <div className="input-group">
             <input
               aria-label="username"
-              className=".input-group__item text-input"
+              className="input-group__item"
               type="text"
               id="username"
               name="username"
@@ -39,14 +39,14 @@ const LoginPage = () => {
 
             <input
               aria-label="password"
-              className=".input-group__item text-input"
+              className="input-group__item"
               id="password"
               type="password"
               name="password"
               placeholder="password"
             />
 
-            <button className=".input-group__item button" type="submit">
+            <button className="input-group__item" type="submit">
               Log in
             </button>
           </div>

@@ -1,3 +1,4 @@
+import { config } from "../../config/config";
 import { getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
 import {
@@ -5,8 +6,12 @@ import {
   returnLastDigit,
 } from "../../utilities/returnDirection";
 
+
+
+
 export class GameController {
   mirrorMove() {
+
     if (this.position.x < 0) {
       this.position.x = this.position.x + 1010;
     } else if (this.position.x > 1000) {
@@ -100,8 +105,8 @@ export class GameController {
       return ship;
     }
     const updatesObject = {
-      chunkX: ship.chunkX + x * 0.1,
-      chunkY: ship.chunkY - y * 0.1,
+      chunkX: Math.floor(ship.chunkX + x * 0.1),
+      chunkY: Math.floor(ship.chunkY - y * 0.1),
     };
 
     const chunkState = await getChunk(token, updatesObject);
