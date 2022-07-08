@@ -30,7 +30,7 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
 
     function gameLoop() {
       // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-      context.fillStyle = "lightgrey";
+      context.fillStyle = "white";
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       if (newShip.position) {
@@ -50,7 +50,6 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
 
   return (
     <div className="canvas-wrapper">
-      <div className="content-container">
       <canvas
         id="responsive-canvas"
         height={1010}
@@ -58,7 +57,6 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
         className="canvas"
         ref={canvasRef}
       />
-    </div>
     </div>
   );
 };

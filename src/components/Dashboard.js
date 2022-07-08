@@ -5,13 +5,12 @@ import { getSetInitialGameState } from "../utilities/getSetInitialGameState";
 import { useEffect, useState } from "react";
 import { keyPress, spacePress } from "./Controls";
 import { useAuth } from "./AuthProvider";
-import {setShipColor} from "../utilities/updateShipColor";
+import { setShipColor } from "../utilities/updateShipColor";
 import { createHashIdFromCoords } from "../utilities/createHashFromId";
-import {socketEmitter} from "../services/socket";
+import { socketEmitter } from "../services/socket";
 import { useShareRealTime } from "./Hooks/socketHooks";
 import generator from "generate-maze";
-import {hashids} from "../utilities/createHashFromId";
-
+import { hashids } from "../utilities/createHashFromId";
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -38,67 +37,90 @@ function Dashboard() {
 
   const returnKey = ({ key }) => {
     const paramsArray = [ship, token, setLoading];
-    key === " " && spacePress(paramsArray, (result) => {
+    key === " " &&
+      spacePress(paramsArray, (result) => {
         socketEmitter("sendUpdate", result);
         return;
       });
-    
-      keyPress(paramsArray, maze, key, (result) => {
-        //set returned ship in state after completing move
-        setShip(result);
-        const { chunkX, chunkY, color, size, _id, position } = result;
-        const hashedRoomID = createHashIdFromCoords(chunkX, chunkY);
-        //if another ship is present, start sending player coords (shareRealTime determines this)
-        shareRealTime && socketEmitter("sendUpdate", { position, _id, color, size });
-        //if ship enters a new chunk, switch socket room. 
-        //id-only object param in sendUpdates tells other players to delete player from their ghost ship array because they left chunk.
-        if (hashedRoomID !== room) {
-          const numbers = hashids.decode(hashedRoomID);
-          // const newMaze = generator(10, 10, false, numbers[0])
-          // setMaze(newMaze);
-          setCurrentRoom(hashedRoomID);
-          socketEmitter("sendUpdate", { _id });
-          socketEmitter("switch", { userId: id, room: hashedRoomID });
-        }
+
+    keyPress(paramsArray, maze, key, (result) => {
+      //set returned ship in state after completing move
+      setShip(result);
+      const { chunkX, chunkY, color, size, _id, position } = result;
+      const hashedRoomID = createHashIdFromCoords(chunkX, chunkY);
+      //if another ship is present, start sending player coords (shareRealTime determines this)
+      shareRealTime &&
+        socketEmitter("sendUpdate", { position, _id, color, size });
+      //if ship enters a new chunk, switch socket room.
+      //id-only object param in sendUpdates tells other players to delete player from their ghost ship array because they left chunk.
+      if (hashedRoomID !== room) {
+        const numbers = hashids.decode(hashedRoomID);
+        // const newMaze = generator(10, 10, false, numbers[0])
+        // setMaze(newMaze);
+        setCurrentRoom(hashedRoomID);
+        socketEmitter("sendUpdate", { _id });
+        socketEmitter("switch", { userId: id, room: hashedRoomID });
+      }
     });
     return;
-
   };
 
   const updateShipColor = async (updates) => {
-
-   
-    
-  setShipColor.bind(ship, token, id, updates, setShip)();
+    setShipColor.bind(ship, token, id, updates, setShip)();
     // setShip(updatedShip);
     //ship.color = "red";
     //ship.save();
   };
 
+  const returnClick = (e) => {
+    if (e.target.id !== "responsive-canvas") {
+      return;
+    }
+    const width = e.target.scrollWidth;
+    const height = e.target.scrollWidth;
+    const x = e.pageX - e.target.offsetLeft;
+    const y = e.pageY - e.target.offsetTop;
+
+    if(x<width*.3 && (y<height*.7 && y>height*.3)){
+      console.log('left')
+    }
+    if(x>width*.7 && (y<height*.7 && y>height*.3)){
+      console.log('right')
+    }
+    if(y>height*.7 && (x<width*.7 && x>width*.3)){
+      console.log('down')
+    }
+    if(y<height*.7 && (x<width*.7 && x>width*.3)){
+      console.log('up')
+    }
+
+  };
+
   return (
     <div
       className="dashboard"
+      onClick={!loading ? undefined : returnClick}
       onKeyDown={!loading ? undefined : returnKey}
       tabIndex="0"
     >
       <div className="content-container">
-       <div className="dashboard-info-container">
-      {ship.position ? (
-        <div>
-          <p>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</p>
-          <p>
-            Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}
-          </p>
-          <p>Ink Level: {ship.inkLevel}</p>
+        <div className="dashboard-info-container">
+          {ship.position ? (
+            <div>
+              <p>Chunk position: {`x: ${ship.chunkX} y: ${ship.chunkY}`}</p>
+              <p>
+                Ship position: {`x: ${ship.position.x} y: ${ship.position.y}`}
+              </p>
+              <p>Ink Level: {ship.inkLevel}</p>
+            </div>
+          ) : (
+            <p>No ship found</p>
+          )}
         </div>
-      ) : (
-        <p>No ship found</p>
-      )}
-      </div> 
         {/* {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>} */}
         <div className="canvas-color-picker-container">
-        <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
-        <ColorPicker updateShipColor={updateShipColor} />
+          <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
+          <ColorPicker updateShipColor={updateShipColor} />
         </div>
       </div>
     </div>

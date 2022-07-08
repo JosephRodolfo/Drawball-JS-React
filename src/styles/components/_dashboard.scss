@@ -1,6 +1,7 @@
 .canvas-color-picker-container {
     display: flex;
     flex-direction: column;
+    background-color: $windows-off-white;
     @include basic-box-shadow-inset;
     @media (min-width: $desktop-breakpoint) {
         flex-direction: row;
@@ -10,7 +11,3 @@
     }
 }
 
-.dashboard>.content-container{
-    background-color: $computer-grey;
-    @include basic-box-shadow
-}

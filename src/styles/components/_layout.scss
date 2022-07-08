@@ -1,0 +1,16 @@
+.layout {
+    background-color: $computer-grey;
+    @include basic-box-shadow;
+    padding: 0;
+    margin: 0 auto;
+    @media (min-width: $desktop-breakpoint) {
+        max-width: 60rem;
+
+        
+    }
+}
+
+.layout>.content-container{
+    padding: 0;
+}
+

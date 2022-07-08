@@ -23,7 +23,21 @@ $l-size: 3.2rem;
 $xl-size: 4.8rem;
 $desktop-breakpoint: 45rem;
 
-
+@mixin micro-background {
+  background: conic-gradient(
+      from 45deg,
+      #020681 0,
+      #020681 90deg,
+      #000337 90deg,
+      #000337 180deg,
+      #0818ff 180deg,
+      #0818ff 270deg,
+      #0f9bfe 270deg,
+      #0f9bfe 360deg
+    );
+    background-size: 1em 1em;
+    height: 100vh;
+}
 
 
 @mixin basic-box-shadow {
@@ -32,5 +46,11 @@ $desktop-breakpoint: 45rem;
 }
 @mixin basic-box-shadow-inset {
   box-shadow:rgba(0,0,0,0.4) 2px 2px 0  inset, white -1px -1px 0px inset;
+}
+
+@font-face {
+  font-family: 'sysfont';
+  src: local('systfont'), url(../../assets/fonts/sysfont.woff) format('woff');
+
 }
 

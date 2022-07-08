@@ -1,4 +1,3 @@
-import { config } from "../../config/config";
 import { getChunk, updateChunk } from "../../actions/chunk";
 import { updateShip } from "../../actions/ship";
 import {
