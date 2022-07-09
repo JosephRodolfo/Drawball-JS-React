@@ -35,7 +35,7 @@ export function socketUpdates(ship, ghostShip, update, shareRealTime) {
 //finds if pixel coords already exist in ships currentChunk array. 
 //if so replaces them. if not, puts them in array. 
   function findStateMatch(ship, update) {
-    if (ship.currentChunk) {
+    if (ship && ship.currentChunk) {
       const indexOfMatch = ship.currentChunk.findIndex((element) => {
         return element.x === update.x && element.y === update.y;
       });

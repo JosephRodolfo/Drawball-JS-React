@@ -1,13 +1,41 @@
 .canvas-color-picker-container {
-    display: flex;
-    flex-direction: column;
-    background-color: $windows-off-white;
-    @include basic-box-shadow-inset;
-    @media (min-width: $desktop-breakpoint) {
-        flex-direction: row;
-
-
-        
-    }
+  display: flex;
+  flex-direction: column;
+  padding: $s-size;
+  background-color: $windows-off-white;
+  @include basic-box-shadow-inset;
+  @media (min-width: $desktop-breakpoint) {
+    flex-direction: row;
+  }
 }
 
+.dashboard-info-container {
+  @include basic-box-shadow-inset;
+  margin-bottom: $s-size;
+  // padding: 0 $s-size;
+}
+
+.hourglass-loader-container {
+  width: 500px;
+  height: 500px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: $off-white;
+}
+
+.hourglass-loader-container > img {
+  width: 200px;
+  max-width: 200px;
+}
+
+.color-picker-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: $s-size;
+}

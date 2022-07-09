@@ -1,0 +1,18 @@
+.data-display{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.data-display>p{
+    margin: 0;
+}
+
+.data-display-text{
+    font-size: $m-size;
+}
+
+.data-display-text {
+    background-color: black;
+    color: red;
+    width: max-content;
+}

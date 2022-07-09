@@ -2,7 +2,7 @@ import { controller } from "./Classes/GameController";
 import { directionArrowToCoords } from "../utilities/directionArrowToCoords";
 
 //keyPress is pressing an arrow ship and moving ship. Returns moved ship for callback. 
-export async function keyPress(params, maze, key, resultsCallback) {
+export async function moveShip(params, maze, key, resultsCallback) {
   const direction = directionArrowToCoords(key);
 
   if (!direction){
@@ -17,10 +17,11 @@ export async function keyPress(params, maze, key, resultsCallback) {
 }
 //spacePress is pressing space and placing pixel. Returns placed pixel for callback. 
 
-export const spacePress = async (params, resultsCallback) => {
+export const placeColor = async (params, resultsCallback) => {
   const [ship, token, setLoading] = params;
   setLoading(false);
-  const result = await controller.handlePlaceColor.call(ship, token);
-  resultsCallback(result);
+  const newChunk = await controller.handlePlaceColor.call(ship, token);
+  controller.placeColorInCurrentChunk.call(ship, newChunk);
+  resultsCallback(newChunk, ship);
   setLoading(true);
 };

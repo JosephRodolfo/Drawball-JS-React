@@ -67,15 +67,18 @@ export class GameController {
       chunkY: this.chunkY,
       color: this.color,
     });
-    const index = this.currentChunk.indexOf((element) => {
-      return element._id === newChunk._id;
-    });
-    index === -1
-      ? this.currentChunk.push(newChunk)
-      : this.currentChunk.splice(index, 1, newChunk);
-
     return newChunk;
   }
+
+    placeColorInCurrentChunk(newChunk){
+
+      const index = this.currentChunk.indexOf((element) => {
+        return element._id === newChunk._id;
+      });
+      index === -1
+        ? this.currentChunk.push(newChunk)
+        : this.currentChunk.splice(index, 1, newChunk);
+    }
   //On player move, x, y params are direction of move.
   //1. checks if off board, if not, returns ship in new position
   //2. if off board, gets new array of colored pixels from server, and updates ship's currentChunk state
