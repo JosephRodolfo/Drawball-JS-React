@@ -20,8 +20,14 @@ export async function moveShip(params, maze, key, resultsCallback) {
 export const placeColor = async (params, resultsCallback) => {
   const [ship, token, setLoading] = params;
   setLoading(false);
-  const newChunk = await controller.handlePlaceColor.call(ship, token);
-  controller.placeColorInCurrentChunk.call(ship, newChunk);
-  resultsCallback(newChunk, ship);
+  const result = await controller.handlePlaceColor.call(ship, token);
+  if (!result){
+    setLoading(true);
+    return;
+  }
+  const {chunk, inkLevel} = result
+  ship.inkLevel = inkLevel;
+  controller.placeColorInCurrentChunk.call(ship, chunk);
+  resultsCallback(chunk, ship);
   setLoading(true);
 };
