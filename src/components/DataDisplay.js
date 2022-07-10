@@ -1,6 +1,6 @@
 import React from "react";
 
-const DataDisplay = ({ ship }) => (
+const DataDisplay = ({ ship, inkLevel }) => (
   <div className="data-display">
     <p>
       Chunk position:
@@ -11,7 +11,7 @@ const DataDisplay = ({ ship }) => (
       <span className="data-display-text">{` x: ${(ship.position.x/10).toString().padStart(3, 0)} y: ${(ship.position.y/10).toString().padStart(3,0)}`}</span>
     </p>
     <p>
-      Ink level: <span className="data-display-text">{ship.inkLevel}</span>
+      Ink level: <span className="data-display-text">{inkLevel}</span>
     </p>
   </div>
 );

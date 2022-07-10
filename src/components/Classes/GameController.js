@@ -61,6 +61,7 @@ export class GameController {
 
   async handlePlaceColor(token) {
     const newChunk = await updateChunk(token, {
+      id: this._id,
       x: this.position.x * 0.1,
       y: this.position.y * 0.1,
       chunkX: this.chunkX,

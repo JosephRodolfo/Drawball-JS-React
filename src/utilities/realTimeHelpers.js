@@ -1,5 +1,7 @@
 //updates ship with pixels placed by other players. then updates ghostShipArray (positions/colors of otehr players)
 //returns an object with the new ship and the new ghostShipArray. 
+
+//This really needs to be redone. It works perfectly as far as I can tell but I need to seperate out updates for placed pixels vs. player movements, either in their own hooks or in their own functions here. 
 export function socketUpdates(ship, ghostShip, update, shareRealTime) {
   const newShip = findStateMatch(ship, update);
   const ghostShipCopy = () => {

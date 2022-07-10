@@ -12,8 +12,10 @@ import { useShareRealTime } from "./Hooks/socketHooks";
 import DataDisplay from "./DataDisplay";
 import { returnClick, returnKey } from "../utilities/onInputReturnKey";
 import generator from "generate-maze";
+import { timer } from "./Timer";
 import loader from "../assets/images/loader.gif";
 import { hashids } from "../utilities/createHashFromId";
+import {useInkLevel} from "./Hooks/useInkLevel"
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -24,6 +26,7 @@ function Dashboard() {
   const [maze, setMaze] = useState([]);
   const [toggledMaze, setToggledMaze] = useState(false);
   const shareRealTime = useShareRealTime();
+  const inkLevel = useInkLevel(ship)
   //effect fires on signing in and loading component, sets initial game state and joins socket room; cleans up with disconnecting from socket room
   useEffect(() => {
     setLoading(false);
@@ -61,13 +64,14 @@ function Dashboard() {
       socketEmitter("sendUpdate", { _id });
       socketEmitter("switch", { userId: id, room: hashedRoomID });
     }
-  }, [ship, id, room, shareRealTime, toggledMaze]);
+  }, [ship.position, ship, id, room, shareRealTime, toggledMaze]);
   //useEffect fires when a new pixel is placed, emits via socket.io to other players.
   useEffect(() => {
     if (newestChunk) {
       socketEmitter("sendUpdate", newestChunk);
     }
   }, [newestChunk]);
+
   //updates ship color on click.
   const updateShipColor = async (updates) => {
     await updateShip(token, id, { ...updates });
@@ -96,6 +100,8 @@ function Dashboard() {
     !toggle && setMaze([]);
   };
 
+  
+
   return (
     <div
       className="dashboard"
@@ -105,19 +111,20 @@ function Dashboard() {
     >
       <div className="content-container">
         <div className="dashboard-info-container">
-          {ship.position ? <DataDisplay ship={ship} /> : <p>No ship found</p>}
+          {ship.position ? <DataDisplay ship={ship} inkLevel={inkLevel}/> : <p>No ship found</p>}
         </div>
         {/* {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>} */}
         <div className="canvas-color-picker-container">
-          {loading ? (
-            <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
-          ) : (
+          {/* conditionally rendering the Canvas component when it's loading breaks the useSocketUpdates hook, need to understand why before I can add this */}
+          {/* {loading ? ( */}
+          <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
+          {/* ) : (
             <div className="hourglass-loader-container">
               <img alt="hourglass loader" src={loader} />
             </div>
-          )}
+          )} */}
           <div className="color-picker-container">
-          <ColorPicker updateShipColor={updateShipColor} />
+            <ColorPicker updateShipColor={updateShipColor} />
           </div>
         </div>
       </div>

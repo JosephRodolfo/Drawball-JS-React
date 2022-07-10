@@ -1,4 +1,3 @@
-import { config } from "../../src/config/config";
 import { useRef, useEffect } from "react";
 import { drawController } from "../utilities/canvasDrawing";
 import { useSocketUpdates } from "./Hooks/socketHooks";
@@ -25,10 +24,11 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
   const { newGhostShipArray, newShip } = useSocketUpdates(ship, shareRealTime);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+ 
 
     function gameLoop() {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
       // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       context.fillStyle = "white";
       context.fillRect(0, 0, canvas.width, canvas.height);
