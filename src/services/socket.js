@@ -1,6 +1,8 @@
 import { io } from "socket.io-client";
 import { config } from "../config";
-export const socket = io(config.url.API_URL);
+export const socket = io(config.url.API_URL, {
+  withCredentials: true,
+});
 
 export function socketEmitter(listener, update) {
   socket.emit(listener, update, (error) => {
