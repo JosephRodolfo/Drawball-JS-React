@@ -16,5 +16,23 @@
     background-color: $windows-blue;
     width: 100%;
     margin: 0;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blue-ribbon-text{
+    color: white;
     padding: 0;
+    margin: 0;
+}
+
+.globe-icon {
+    width: 3em;
+}
+
+.header>.content-container {
+    padding-bottom: 0;
 }

@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: space-around;
 }
-.data-display>p{
+.data-display>div>p{
     margin: 0;
 }
 
@@ -14,5 +14,41 @@
 .data-display-text {
     background-color: black;
     color: red;
-    width: max-content;
+    width: 100%;
+    white-space:nowrap;
+    padding: .1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.dashboard-item{
+    @include better-computer-borders;
+    background-color: $computer-light-grey;
+    display: flex;
+    flex-direction: column;
+    max-width: 9em;
+    &:nth-child(2){
+        width: 10em;
+        max-width: 10em;
+    }
+ 
+
+    @media (min-width: $desktop-breakpoint) {
+        width: 10em;
+      flex-direction: row;
+      padding: .1em;
+
+      &:nth-child(2){
+        width: 12em;
+        max-width: 12em;
+    }
+
+        
+    }
+}
+
+.low-ink-class {
+    background-color: $windows-red;
 }

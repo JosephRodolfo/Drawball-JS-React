@@ -22,6 +22,7 @@ export const startLogin = async (loginInfo, redirectOnSuccess) => {
       return;
     }
   } catch (e) {
+    alert('Sorry, wrong username or password!')
     console.error("Error:", e);
   }
 };
@@ -63,5 +64,6 @@ export const startCreateUser = async (createUserInfo, redirectOnSuccess) => {
     return data;
   } catch (e) {
     console.error("Error:", e);
+    console.log(e);
   }
 };

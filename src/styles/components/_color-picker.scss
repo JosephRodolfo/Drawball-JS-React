@@ -1,0 +1,33 @@
+.color-picker-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: $s-size;
+  margin-bottom: $s-size;
+  @media (min-width: $desktop-breakpoint) {
+    flex-direction: column;
+  }
+}
+.color-picker-container > * {
+  margin-bottom: $s-size;
+}
+
+.color-picker-container > button {
+  width: fit-content;
+
+  height: 100%;
+
+  &:active {
+    padding: 0;
+    border: 2px dotted black;
+  }
+
+  @media (min-width: $desktop-breakpoint) {
+    width: 100%;
+    padding: $s-size;
+
+    &:active {
+      padding: $s-size;
+      border: 2px dotted black;
+    }
+  }
+}

@@ -2,17 +2,24 @@ import React from "react";
 
 const DataDisplay = ({ ship, inkLevel }) => (
   <div className="data-display">
-    <p>
-      Chunk position:
+    <div className="dashboard-item">
+      <p>Chunk position:</p>
+
       <span className="data-display-text">{` x: ${ship.chunkX} y: ${ship.chunkY}`}</span>
-    </p>
-    <p>
-      Ship position:
-      <span className="data-display-text">{` x: ${(ship.position.x/10).toString().padStart(3, 0)} y: ${(ship.position.y/10).toString().padStart(3,0)}`}</span>
-    </p>
-    <p>
-      Ink level: <span className="data-display-text">{inkLevel}</span>
-    </p>
+    </div>
+    <div className="dashboard-item">
+      <p>Ship position:</p>
+
+      <span className="data-display-text">{` x: ${(ship.position.x / 10)
+        .toString()
+        .padStart(3, 0)} y: ${(ship.position.y / 10)
+        .toString()
+        .padStart(3, 0)}`}</span>
+    </div>
+    <div className={inkLevel<10 ? "low-ink-class dashboard-item": "dashboard-item"}>
+      <p>Ink level:</p>
+      <span className="data-display-text">{inkLevel}</span>
+    </div>
   </div>
 );
 

@@ -1,0 +1,23 @@
+.navlinks {
+    text-decoration: none;
+    text-align: center;
+}
+
+.signout-non-button{
+    width: fit-content;
+    font-family: 'win95';
+}
+
+.nav-flex-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.nav-flex-container >.button {
+    width: fit-content;
+    padding: 0 1em;
+    font-size: 1em;
+    line-height: 1.5em;
+
+}

@@ -1,6 +1,7 @@
 // Colors
 $dark-gray: #333;
 $gray: #666;
+$computer-light-grey: #e1e1e1;
 $blue: #1c88bf;
 $dark-blue: #364051;
 $off-white: #f5f5f5;
@@ -13,7 +14,7 @@ $windows-off-white: #fffccd;
 
 //Font-Size
 
-$font-size-large: 1.8rem;
+$font-size-large: 1.6rem;
 $font-size-small: 1.4rem;
 
 // Spacing
@@ -46,6 +47,16 @@ $desktop-breakpoint: 45rem;
 }
 @mixin basic-box-shadow-inset {
   box-shadow:rgba(0,0,0,0.4) 2px 2px 0  inset, white -1px -1px 0px inset;
+}
+
+@mixin better-computer-borders {
+
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid #858585;
+  border-bottom: 2px solid #858585;
+
+ 
 }
 
 @font-face {

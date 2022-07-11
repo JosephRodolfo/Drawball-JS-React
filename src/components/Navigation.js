@@ -15,23 +15,22 @@ export const Navigation = () => {
 
   return (
     <nav className="navigation">
-      {!token ? (
-        <div>
-          <NavLink className="navlinks" to="/login">
+        <div className="nav-flex-container">
+          <NavLink className="button navlinks" to="/login">
             Login
           </NavLink>
-          <NavLink className="navlinks" to="/dashboard">
+          <NavLink className="button navlinks" to="/dashboard">
             Dashboard
           </NavLink>
-          <NavLink className="navlinks" to="/signup">
+          <NavLink className="button navlinks" to="/signup">
             Signup
           </NavLink>
-        </div>
-      ) : (
-        <button className="signout-non-button" type="button" onClick={logout}>
+{token && 
+        <button className="button signout-non-button" type="button" onClick={logout}>
           Sign Out
-        </button>
-      )}
+        </button>}
+        </div>
+
     </nav>
   );
 };

@@ -18,6 +18,9 @@ const SignupPage = () => {
         navigate("/dashboard");
       }
     );
+    if(!user){
+      return;
+    }
     onCreateUser(user);
     // const ship = await startCreateShip(user.token);
     await startCreateShip(user.token);
@@ -50,15 +53,17 @@ const SignupPage = () => {
               className="input-group__item"
               name="email"
               placeholder="email"
+              required={true}
             />
             <input
               type="password"
               className="input-group__item"
               name="password"
               placeholder="password"
+              required={true}
             />
 
-            <button className="button" type="submit">
+            <button className="button big-button" type="submit">
               Submit
             </button>
           </div>

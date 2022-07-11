@@ -49,7 +49,6 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
   }, [newShip, maze, newGhostShipArray]);
 
   return (
-    <div className="canvas-wrapper">
       <canvas
         id="responsive-canvas"
         height={1010}
@@ -57,7 +56,6 @@ const Canvas = ({ ship, shareRealTime, maze }) => {
         className="canvas"
         ref={canvasRef}
       />
-    </div>
   );
 };
 

@@ -13,13 +13,13 @@ const ColorPicker = ({updateShipColor}) => {
   };
 
   return (
-    <div>
+    <div className="color-picker-container">
       <ChromePicker
         color={color.background}
         onChangeComplete={handleChangeComplete}
         disableAlpha={true}
       />
-      <button onClick={changeColor}>Change Color!</button>
+      <button className="button" onClick={changeColor}>Change Color!</button>
     </div>
   );
 };

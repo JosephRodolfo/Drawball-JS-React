@@ -19,6 +19,10 @@ const LoginPage = () => {
         navigate(previousLocation);
       }
     );
+
+    if(!user){
+      return;
+    }
     onLogin(user);
   };
 
@@ -35,6 +39,7 @@ const LoginPage = () => {
               id="username"
               name="username"
               placeholder="email"
+              required={true}
             />
 
             <input
@@ -44,9 +49,11 @@ const LoginPage = () => {
               type="password"
               name="password"
               placeholder="password"
+              required={true}
+
             />
 
-            <button className="input-group__item" type="submit">
+            <button className="button big-button input-group__item" type="submit">
               Log in
             </button>
           </div>

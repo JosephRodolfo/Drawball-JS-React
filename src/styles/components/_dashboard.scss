@@ -12,7 +12,9 @@
 .dashboard-info-container {
   @include basic-box-shadow-inset;
   margin-bottom: $s-size;
-  // padding: 0 $s-size;
+  padding: .5em;
+  background-color: $computer-light-grey;
+
 }
 
 .hourglass-loader-container {
@@ -31,11 +33,24 @@
   max-width: 200px;
 }
 
-.color-picker-container {
+
+.canvas-container {
+display: flex;
+flex: row;
+justify-content: center;
+align-items: center;
+
+}
+.dashboard-right-side-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-left: $s-size;
+  flex-basis: 300px;
+
+  @media (min-width: $desktop-breakpoint) {
+    // flex-direction: column;
+  }
 }

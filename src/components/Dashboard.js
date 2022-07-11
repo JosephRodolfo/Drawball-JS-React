@@ -12,10 +12,10 @@ import { useShareRealTime } from "./Hooks/socketHooks";
 import DataDisplay from "./DataDisplay";
 import { returnClick, returnKey } from "../utilities/onInputReturnKey";
 import generator from "generate-maze";
-import { timer } from "./Timer";
-import loader from "../assets/images/loader.gif";
 import { hashids } from "../utilities/createHashFromId";
 import {useInkLevel} from "./Hooks/useInkLevel"
+import ModeSelector from "./ModeSelector";
+import Instructions from "./Instructions";
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -94,13 +94,10 @@ function Dashboard() {
     });
   };
 
-  const toggleMaze = () => {
-    const toggle = !toggledMaze;
-    setToggledMaze(toggle);
-    !toggle && setMaze([]);
+  const toggleMaze = (checked) => {
+    setToggledMaze(checked);
+    !checked && setMaze([]);
   };
-
-  
 
   return (
     <div
@@ -115,7 +112,8 @@ function Dashboard() {
         </div>
         {/* {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>} */}
         <div className="canvas-color-picker-container">
-          {/* conditionally rendering the Canvas component when it's loading breaks the useSocketUpdates hook, need to understand why before I can add this */}
+          <div className="canvas-container">
+          {/* conditionally rendering the Canvas component when it's loading breaks the useSocketUpdates hook, need to understand why before I can add this back; it seems to clear the ghostShipArray (array of other players) whenever the main player moves */}
           {/* {loading ? ( */}
           <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
           {/* ) : (
@@ -123,12 +121,14 @@ function Dashboard() {
               <img alt="hourglass loader" src={loader} />
             </div>
           )} */}
-          <div className="color-picker-container">
+          </div>
+          <div className="dashboard-right-side-content">
             <ColorPicker updateShipColor={updateShipColor} />
+            <ModeSelector toggleMaze={toggleMaze}/>
+            <Instructions />
           </div>
         </div>
       </div>
-      <button onClick={toggleMaze}>Maze Mode Beta</button>
     </div>
   );
 }
