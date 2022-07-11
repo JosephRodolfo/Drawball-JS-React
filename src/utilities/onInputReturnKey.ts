@@ -6,5 +6,6 @@ export const returnKey = (callback: Function, { key }: KeyboardEvent) => {
 
 export const returnClick = (callback: Function, e: React.SyntheticEvent) => {
   const key = returnCoordsFromClick(e);
-  callback(key);
+ const result = callback(key);
+ return result;
 };

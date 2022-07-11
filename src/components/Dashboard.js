@@ -13,9 +13,10 @@ import DataDisplay from "./DataDisplay";
 import { returnClick, returnKey } from "../utilities/onInputReturnKey";
 import generator from "generate-maze";
 import { hashids } from "../utilities/createHashFromId";
-import {useInkLevel} from "./Hooks/useInkLevel"
+import { useInkLevel } from "./Hooks/useInkLevel";
 import ModeSelector from "./ModeSelector";
 import Instructions from "./Instructions";
+import { timer } from "./Timer";
 
 function Dashboard() {
   const [ship, setShip] = useState({});
@@ -26,7 +27,7 @@ function Dashboard() {
   const [maze, setMaze] = useState([]);
   const [toggledMaze, setToggledMaze] = useState(false);
   const shareRealTime = useShareRealTime();
-  const inkLevel = useInkLevel(ship)
+  const inkLevel = useInkLevel(ship);
   //effect fires on signing in and loading component, sets initial game state and joins socket room; cleans up with disconnecting from socket room
   useEffect(() => {
     setLoading(false);
@@ -86,7 +87,7 @@ function Dashboard() {
       placeColor(paramsArray, (newChunk, newShip) => {
         setShip(newShip);
         setNewestChunk(newChunk);
-        return;
+        return false;
       });
     //set returned ship in state after completing move
     moveShip(paramsArray, maze, key, (result) => {
@@ -102,21 +103,37 @@ function Dashboard() {
   return (
     <div
       className="dashboard"
-      onMouseDown={!loading ? undefined : returnClick.bind(null, keySwitch)}
+      onMouseDown={
+        !loading
+          ? undefined
+          : (e) => {
+              timer.start(() => {
+                console.log(e.detail)
+                 loading && returnClick(keySwitch, e);  
+              }, 100);
+            }
+      }
+      onMouseUp={() => {
+        timer.stop();
+      }}
       onKeyDown={!loading ? undefined : returnKey.bind(null, keySwitch)}
       tabIndex="0"
     >
       <div className="content-container">
         <div className="dashboard-info-container">
-          {ship.position ? <DataDisplay ship={ship} inkLevel={inkLevel}/> : <p>No ship found</p>}
+          {ship.position ? (
+            <DataDisplay ship={ship} loading={loading} inkLevel={inkLevel} />
+          ) : (
+            <p>No ship found</p>
+          )}
         </div>
         {/* {!loading ? <p>Loading Chunk</p> : <p>Chunk Ready</p>} */}
         <div className="canvas-color-picker-container">
           <div className="canvas-container">
-          {/* conditionally rendering the Canvas component when it's loading breaks the useSocketUpdates hook, need to understand why before I can add this back; it seems to clear the ghostShipArray (array of other players) whenever the main player moves */}
-          {/* {loading ? ( */}
-          <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
-          {/* ) : (
+            {/* conditionally rendering the Canvas component when it's loading breaks the useSocketUpdates hook, need to understand why before I can add this back; it seems to clear the ghostShipArray (array of other players) whenever the main player moves */}
+            {/* {loading ? ( */}
+            <Canvas shareRealTime={shareRealTime} maze={maze} ship={ship} />
+            {/* ) : (
             <div className="hourglass-loader-container">
               <img alt="hourglass loader" src={loader} />
             </div>
@@ -124,7 +141,7 @@ function Dashboard() {
           </div>
           <div className="dashboard-right-side-content">
             <ColorPicker updateShipColor={updateShipColor} />
-            <ModeSelector toggleMaze={toggleMaze}/>
+            <ModeSelector toggleMaze={toggleMaze} />
             <Instructions />
           </div>
         </div>

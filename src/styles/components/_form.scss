@@ -34,3 +34,15 @@
     }
   }
   
+  .signup-loader {
+
+    height: 6em;
+  }
+
+  .loader-container {
+    width: 100%;
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

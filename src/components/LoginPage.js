@@ -1,14 +1,18 @@
 import React from "react";
 import { startLogin } from "../actions/auth";
 import { useAuth } from "./AuthProvider";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import loader from "../assets/images/loader.gif";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { onLogin } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const { username, password } = document.forms[0];
 
@@ -20,9 +24,11 @@ const LoginPage = () => {
       }
     );
 
-    if(!user){
+    if (!user) {
+      setLoading(false);
       return;
     }
+    setLoading(false);
     onLogin(user);
   };
 
@@ -50,12 +56,17 @@ const LoginPage = () => {
               name="password"
               placeholder="password"
               required={true}
-
             />
 
-            <button className="button big-button input-group__item" type="submit">
-              Log in
-            </button>
+            {loading ? (
+              <div className="loader-container">
+                <img className="signup-loader" src={loader} />{" "}
+              </div>
+            ) : (
+              <button className="button big-button" type="submit">
+                Log in
+              </button>
+            )}
           </div>
         </form>
       </div>

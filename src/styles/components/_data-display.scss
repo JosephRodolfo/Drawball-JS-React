@@ -29,9 +29,14 @@
     display: flex;
     flex-direction: column;
     max-width: 9em;
+
+    &:first-child{
+        width: 10em;
+        max-width: 8em;
+    }
     &:nth-child(2){
         width: 10em;
-        max-width: 10em;
+        max-width: 8em;
     }
  
 
@@ -39,6 +44,11 @@
         width: 10em;
       flex-direction: row;
       padding: .1em;
+
+      &:first-child{
+        width: 12em;
+        max-width: 12em;
+    }
 
       &:nth-child(2){
         width: 12em;
