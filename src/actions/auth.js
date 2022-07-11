@@ -1,7 +1,8 @@
+import { config } from "../config";
 export const startLogin = async (loginInfo, redirectOnSuccess) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_PORT}/v1/user/login`,
+      `${config.url.API_URL}/v1/user/login`,
       {
         method: "POST",
         headers: {
@@ -30,7 +31,7 @@ export const startLogin = async (loginInfo, redirectOnSuccess) => {
 export const startLogout = async (token) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_PORT}/v1/user/logout`,
+      `${config.url.API_URL}/v1/user/logout`,
       {
         method: "POST",
         headers: {
@@ -49,7 +50,7 @@ export const startLogout = async (token) => {
 
 export const startCreateUser = async (createUserInfo, redirectOnSuccess) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_PORT}/v1/user`, {
+    const response = await fetch(`${config.url.API_URL}/v1/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,13 +58,16 @@ export const startCreateUser = async (createUserInfo, redirectOnSuccess) => {
       },
       body: JSON.stringify(createUserInfo),
     });
-    console.log(response);
+    if(response.status !== 201){
+      alert(`Sorry, something went wrong!: ${response.statusText}`)
+      return;
+    }
 
     const data = await response.json();
     redirectOnSuccess();
     return data;
   } catch (e) {
+    alert(`Sorry, something went wrong!: ${e}`)
     console.error("Error:", e);
-    console.log(e);
   }
 };

@@ -8,9 +8,9 @@ const ModeSelector = ({ toggleMaze }) => {
   return (
     <div className="mode-selector">
       <label>Maze Mode (Beta)</label>
-      <label class="switch">
+      <label className="switch">
         <input type="checkbox" onChange={toggleMazeChild} />
-        <span class="slider"></span>
+        <span className="slider"></span>
       </label>
     </div>
   );

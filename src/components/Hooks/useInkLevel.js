@@ -11,7 +11,7 @@ export const useInkLevel = (ship) => {
 
   useEffect(() => {
     timer.start(() => {
-      if (ship.inkLevel > 80) {
+      if (ship.inkLevel > 200) {
         return;
       }
       const number = ship.inkLevel + 1;
@@ -20,7 +20,7 @@ export const useInkLevel = (ship) => {
 
       setInk(number);
       return;
-    }, 5000);
+    }, 10000);
 
     return () => timer.stop();
   }, [ship]);

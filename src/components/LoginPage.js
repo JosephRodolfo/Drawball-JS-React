@@ -13,7 +13,7 @@ const LoginPage = () => {
     const { username, password } = document.forms[0];
 
     let user = await startLogin(
-      { email: username.value, password: password.value },
+      { username: username.value, password: password.value },
       () => {
         const previousLocation = location.state?.from?.pathname || "/dashboard";
         navigate(previousLocation);
@@ -38,7 +38,7 @@ const LoginPage = () => {
               type="text"
               id="username"
               name="username"
-              placeholder="email"
+              placeholder="username"
               required={true}
             />
 

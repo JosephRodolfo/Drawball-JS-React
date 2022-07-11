@@ -1,10 +1,11 @@
+import { config } from "../config";
 export const getChunk = async (token, chunkPositionInfo) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_PORT}/v1/chunk/getchunk`, {
+    const response = await fetch(`${config.url.API_URL}/v1/chunk/getchunk`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(chunkPositionInfo),
     });
@@ -21,10 +22,10 @@ export const getChunk = async (token, chunkPositionInfo) => {
 };
 export const createChunk = async (token, chunkPositionInfo) => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_PORT}/v1/chunk`, {
+    const response = await fetch(`${config.url.API_URL}/v1/chunk`, {
       method: "POST",
       headers: {
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(chunkPositionInfo),
@@ -43,7 +44,7 @@ export const createChunk = async (token, chunkPositionInfo) => {
 export const updateChunk = async (token, updatedChunkInfo) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_PORT}/v1/chunk/`,
+      `${config.url.API_URL}/v1/chunk/`,
       {
         method: "PATCH",
         headers: {

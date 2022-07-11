@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
-export const socket = io(process.env.REACT_APP_PORT);
+import { config } from "../config";
+export const socket = io(config.url.API_URL);
 
 export function socketEmitter(listener, update) {
   socket.emit(listener, update, (error) => {

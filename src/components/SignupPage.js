@@ -10,10 +10,10 @@ const SignupPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = document.forms[0];
+    const { username, password } = document.forms[0];
 
     const user = await startCreateUser(
-      { email: email.value, password: password.value },
+      { username: username.value, password: password.value },
       () => {
         navigate("/dashboard");
       }
@@ -51,8 +51,8 @@ const SignupPage = () => {
             <input
               type="text"
               className="input-group__item"
-              name="email"
-              placeholder="email"
+              name="username"
+              placeholder="username"
               required={true}
             />
             <input

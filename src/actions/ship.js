@@ -1,7 +1,7 @@
-
+import { config } from "../config";
 export const startCreateShip = async (token) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_PORT}/v1/ship`, {
+      const response = await fetch(`${config.url.API_URL}/v1/ship`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -21,7 +21,7 @@ export const startCreateShip = async (token) => {
 
   export const fetchShip = async (token, id) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_PORT}/v1/ship/${id}`, {
+      const response = await fetch(`${config.url.API_URL}/v1/ship/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const startCreateShip = async (token) => {
   
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_PORT}/v1/ship/${id}`,
+        `${config.url.API_URL}/v1/ship/${id}`,
         {
           method: "PATCH",
           headers: {
