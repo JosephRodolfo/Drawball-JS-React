@@ -1,8 +1,9 @@
 import { timer } from "../Timer";
 import { useEffect, useState } from "react";
 import { socketEmitter } from "../../services/socket";
+import { updateShip } from "../../actions/ship";
 
-export const useInkLevel = (ship) => {
+export const useInkLevel = (ship, token) => {
   const [ink, setInk] = useState(ship.inkLevel);
 
   useEffect(() => {
@@ -16,14 +17,15 @@ export const useInkLevel = (ship) => {
       }
       const number = ship.inkLevel + 1;
       ship.inkLevel = number;
-      socketEmitter("incrementInk", { id: ship._id, ink: number });
+      updateShip(token, ship._id, {inkLevel: number});
+      // socketEmitter("incrementInk", { id: ship._id, ink: number });
 
       setInk(number);
       return;
     }, 10000);
 
     return () => timer.stop();
-  }, [ship]);
+  }, [ship, token]);
 
   return ink;
 };

@@ -27,7 +27,7 @@ function Dashboard() {
   const [maze, setMaze] = useState([]);
   const [toggledMaze, setToggledMaze] = useState(false);
   const shareRealTime = useShareRealTime();
-  const inkLevel = useInkLevel(ship);
+  const inkLevel = useInkLevel(ship, token);
   //effect fires on signing in and loading component, sets initial game state and joins socket room; cleans up with disconnecting from socket room
   useEffect(() => {
     setLoading(false);
