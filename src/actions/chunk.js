@@ -1,13 +1,12 @@
 import { config } from "../config";
-export const getChunk = async (token, chunkPositionInfo) => {
+export const getChunk = async (token, {chunkX, chunkY}) => {
   try {
-    const response = await fetch(`${config.url.API_URL}/v1/chunk/getchunk`, {
-      method: "POST",
+    const response = await fetch(`${config.url.API_URL}/v1/chunk/?chunkX=${chunkX}&chunkY=${chunkY}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(chunkPositionInfo),
     });
 
     if (!response.ok) {
