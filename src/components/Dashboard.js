@@ -100,17 +100,29 @@ function Dashboard() {
     !checked && setMaze([]);
   };
 
+
   return (
     <div
       className="dashboard"
+      onTouchStart={(e)=>{
+        // returnClick(keySwitch, e);
+        timer.start(() => {
+          returnClick(keySwitch, e);
+        }, 100);
+
+      }}
+      onTouchEnd={(e) => {
+        timer.stop();
+      }}
       onMouseDown={
         !loading
           ? undefined
           : (e) => {
-              timer.start(() => {
-                console.log(e.detail)
-                 loading && returnClick(keySwitch, e);  
-              }, 100);
+              // returnClick(keySwitch, e);
+
+                timer.start(() => {
+                  returnClick(keySwitch, e);
+                }, 100);
             }
       }
       onMouseUp={() => {

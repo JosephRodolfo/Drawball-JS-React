@@ -57,3 +57,15 @@ export function returnCoordsFromClick({ target, pageX, pageY }: any) {
   const key = convertClickToDirection(width, height, x, y);
   return key;
 }
+
+export function returnCoordsFromTouch({ target, changedTouches }: any) {
+  if (target.id !== "responsive-canvas") {
+    return;
+  }
+  const width = target.scrollWidth;
+  const height = target.scrollWidth;
+  const x = changedTouches[0].pageX - target.offsetLeft;
+  const y = changedTouches[0].pageY - target.offsetTop;
+  const key = convertClickToDirection(width, height, x, y);
+  return key;
+}

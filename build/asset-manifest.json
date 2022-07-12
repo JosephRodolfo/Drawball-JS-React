@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/Drawball-JS-React/static/css/main.122c0cb3.css",
-    "main.js": "/Drawball-JS-React/static/js/main.1b388800.js",
+    "main.css": "/Drawball-JS-React/static/css/main.5d22f19c.css",
+    "main.js": "/Drawball-JS-React/static/js/main.ac63aa5a.js",
+    "static/media/loader.gif": "/Drawball-JS-React/static/media/loader.be31a07d3909a155fbe0.gif",
     "static/media/w95fa.woff": "/Drawball-JS-React/static/media/w95fa.a79f08367baf01d93aca.woff",
     "static/media/sysfont.woff": "/Drawball-JS-React/static/media/sysfont.a8ca1e2cc0735a64d686.woff",
     "index.html": "/Drawball-JS-React/index.html",
-    "main.122c0cb3.css.map": "/Drawball-JS-React/static/css/main.122c0cb3.css.map",
-    "main.1b388800.js.map": "/Drawball-JS-React/static/js/main.1b388800.js.map"
+    "main.5d22f19c.css.map": "/Drawball-JS-React/static/css/main.5d22f19c.css.map",
+    "main.ac63aa5a.js.map": "/Drawball-JS-React/static/js/main.ac63aa5a.js.map"
   },
   "entrypoints": [
-    "static/css/main.122c0cb3.css",
-    "static/js/main.1b388800.js"
+    "static/css/main.5d22f19c.css",
+    "static/js/main.ac63aa5a.js"
   ]
 }
