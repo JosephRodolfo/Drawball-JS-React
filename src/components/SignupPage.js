@@ -2,9 +2,10 @@ import React from "react";
 import { useAuth } from "./AuthProvider";
 import { startCreateUser } from "../actions/auth";
 import { useNavigate } from "react-router-dom";
-import { startCreateShip } from "../actions/ship";
+import { startCreateShip, updateShip } from "../actions/ship";
 import { useState } from "react";
 import loader from "../assets/images/loader.gif";
+import { getChunk } from "../actions/chunk";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -17,10 +18,7 @@ const SignupPage = () => {
     const { username, password } = document.forms[0];
 
     const user = await startCreateUser(
-      { username: username.value, password: password.value },
-      () => {
-        navigate("/dashboard");
-      }
+      { username: username.value, password: password.value }
     );
     if (!user) {
       setLoading(false);
@@ -30,7 +28,21 @@ const SignupPage = () => {
     setLoading(false);
     onCreateUser(user);
     // const ship = await startCreateShip(user.token);
-    await startCreateShip(user.token);
+    const ship = await startCreateShip(user.token)
+    const chunk = await getChunk(user.token, {chunkX: 0, chunkY: 0});
+     updateShip(user.token, ship._id, {
+      currentChunk: chunk,
+      chunkX: 0,
+      chunkY: 0,
+      position: {x: 520, y: 520}
+    }).then(()=>{
+
+      navigate("/dashboard");
+
+      
+    })
+
+
   };
 
   return (

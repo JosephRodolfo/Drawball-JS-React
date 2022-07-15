@@ -14,7 +14,7 @@ function AppRouter() {
     <Layout>
       <Routes>
         <Route index element={<LoginPage />} />
-        <Route path="/" element={<LoginPage/>} />
+        <Route path="/Drawball-JS-React" element={<LoginPage/>} />
 
         <Route path="/login" element={<LoginPage/>} />
         <Route

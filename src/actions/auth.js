@@ -59,12 +59,11 @@ export const startCreateUser = async (createUserInfo, redirectOnSuccess) => {
       body: JSON.stringify(createUserInfo),
     });
     if(response.status !== 201){
-      alert(`Sorry, something went wrong!: ${response.statusText}`)
+      alert(`Sorry, something went wrong! (Password must have at least 6 characters.): ${response.statusText}`)
       return;
     }
 
     const data = await response.json();
-    redirectOnSuccess();
     return data;
   } catch (e) {
     alert(`Sorry, something went wrong!: ${e}`)
