@@ -1,25 +1,46 @@
 import React from "react";
 import { useAuth } from "./AuthProvider";
-import { startCreateUser } from "../actions/auth";
+import { refreshLogin, startCreateUser, startLogin } from "../actions/auth";
 import { useNavigate } from "react-router-dom";
 import { startCreateShip, updateShip } from "../actions/ship";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import loader from "../assets/images/loader.gif";
 import { getChunk } from "../actions/chunk";
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const { token, onCreateUser } = useAuth();
+  const { token, onCreateUser, onLogin } = useAuth();
   const [loading, setLoading] = useState(false);
+
+
+
+//on component mount, checks if there's a cookie and if valid, 
+// logs user in and redirects to dashboard This will eventually be a hook so I don't
+//repeat it in the LoginPage component.
+  useEffect(() => {
+    refreshLogin().then((user)=>{
+
+    if (!user) {
+      setLoading(false);
+      return;
+    } else {
+      setLoading(false);
+      onLogin(user);
+
+      navigate('/dashboard');
+    }
+  })
+  }, [navigate, onLogin]);
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
     const { username, password } = document.forms[0];
 
-    const user = await startCreateUser(
-      { username: username.value, password: password.value }
-    );
+    const user = await startCreateUser({
+      username: username.value,
+      password: password.value,
+    });
     if (!user) {
       setLoading(false);
 
@@ -27,22 +48,16 @@ const SignupPage = () => {
     }
     setLoading(false);
     onCreateUser(user);
-    // const ship = await startCreateShip(user.token);
-    const ship = await startCreateShip(user.token)
-    const chunk = await getChunk(user.token, {chunkX: 0, chunkY: 0});
-     updateShip(user.token, ship._id, {
+    const ship = await startCreateShip(user.token);
+    const chunk = await getChunk(user.token, { chunkX: 0, chunkY: 0 });
+    await updateShip(user.token, ship._id, {
       currentChunk: chunk,
       chunkX: 0,
       chunkY: 0,
-      position: {x: 520, y: 520}
-    }).then(()=>{
+      position: { x: 520, y: 520 },
+    });
 
-      navigate("/dashboard");
-
-      
-    })
-
-
+    navigate("/dashboard");
   };
 
   return (

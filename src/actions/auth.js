@@ -9,6 +9,7 @@ export const startLogin = async (loginInfo, redirectOnSuccess) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginInfo),
+        credentials: 'include'
       }
     );
     if (!response.ok) {
@@ -28,6 +29,36 @@ export const startLogin = async (loginInfo, redirectOnSuccess) => {
   }
 };
 
+export const refreshLogin = async () => {
+  try {
+    const response = await fetch(
+      `${config.url.API_URL}/v1/user/refresh`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    const data = await response.json();
+
+    if (data.token) {
+
+      return data;
+    } else {
+      return;
+    }
+  } catch (e) {
+    console.error("Error:", e);
+  }
+
+
+}
+
 export const startLogout = async (token) => {
   try {
     const response = await fetch(
@@ -36,19 +67,18 @@ export const startLogout = async (token) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: 'include',
       }
     );
 
-    const data = await response.json();
-    return data;
+
   } catch (e) {
     console.error("Error:", e);
   }
 };
 
-export const startCreateUser = async (createUserInfo, redirectOnSuccess) => {
+export const startCreateUser = async (createUserInfo) => {
   try {
     const response = await fetch(`${config.url.API_URL}/v1/user`, {
       method: "POST",
@@ -56,10 +86,11 @@ export const startCreateUser = async (createUserInfo, redirectOnSuccess) => {
         "Content-Type": "application/json",
         Accept: "/",
       },
+      credentials:  'include',
       body: JSON.stringify(createUserInfo),
     });
     if(response.status !== 201){
-      alert(`Sorry, something went wrong! (Password must have at least 6 characters.): ${response.statusText}`)
+      alert(`Sorry, something went wrong! (Password must have at least 7 characters.): ${response.statusText}`)
       return;
     }
 

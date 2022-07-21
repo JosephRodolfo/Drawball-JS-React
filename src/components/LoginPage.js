@@ -1,7 +1,7 @@
 import React from "react";
-import { startLogin } from "../actions/auth";
+import { startLogin, refreshLogin } from "../actions/auth";
 import { useAuth } from "./AuthProvider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import loader from "../assets/images/loader.gif";
 
@@ -10,6 +10,25 @@ const LoginPage = () => {
   const location = useLocation();
   const { onLogin } = useAuth();
   const [loading, setLoading] = useState(false);
+
+  //on component mount, checks if there's a cookie and if valid, 
+// logs user in and redirects to dashboard This will eventually be a hook so I don't
+//repeat it in the LoginPage component.
+  useEffect(() => {
+    refreshLogin().then((user)=>{
+
+    if (!user) {
+      setLoading(false);
+      return;
+    } else {
+      setLoading(false);
+      onLogin(user);
+
+      navigate('/dashboard');
+    }
+  })
+  }, [navigate, onLogin]);
+
 
   const handleSubmit = async (e) => {
     setLoading(true);

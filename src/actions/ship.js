@@ -4,9 +4,9 @@ export const startCreateShip = async (token) => {
       const response = await fetch(`${config.url.API_URL}/v1/ship`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        credentials: 'include',
       });
   
       if (!response.ok) {
@@ -25,8 +25,8 @@ export const startCreateShip = async (token) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: 'include',
       });
   
       if (!response.ok) {
@@ -49,11 +49,17 @@ export const startCreateShip = async (token) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(updatedShipInfo),
+          credentials: 'include',
+
         }
       );
+
+      if (response.status === 401){
+        alert("Sorry, you've been logged out due to inactivity. Log in again to keep playing.");
+        throw new Error(`HTTP error: ${response.status}`);
+      }
   
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);

@@ -8,9 +8,8 @@ export const Navigation = () => {
 
   const logout = async () => {
     socket.emit("leave", id);
-
-    const logout = startLogout(token);
-    onLogout(logout);
+    await startLogout(token);
+    onLogout();
   };
 
   return (

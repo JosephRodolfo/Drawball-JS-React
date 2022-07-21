@@ -1,12 +1,14 @@
 import { config } from "../config";
+
 export const getChunk = async (token, {chunkX, chunkY}) => {
   try {
     const response = await fetch(`${config.url.API_URL}/v1/chunk/?chunkX=${chunkX}&chunkY=${chunkY}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: 'include',
+
     });
 
     if (!response.ok) {
@@ -24,9 +26,10 @@ export const createChunk = async (token, chunkPositionInfo) => {
     const response = await fetch(`${config.url.API_URL}/v1/chunk`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      credentials: 'include',
+
       body: JSON.stringify(chunkPositionInfo),
     });
 
@@ -48,11 +51,16 @@ export const updateChunk = async (token, updatedChunkInfo) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify(updatedChunkInfo),
       }
     );
+
+    if (response.status === 401){
+      alert("Sorry, you've been logged out due to inactivity. Log in again to keep playing.");
+      throw new Error(`HTTP error: ${response.status}`);
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
